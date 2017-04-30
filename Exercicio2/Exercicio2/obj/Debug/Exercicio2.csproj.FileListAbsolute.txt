@@ -1,6 +1,0 @@
-C:\Users\marco\OneDrive\Sistemas Distribuidos\Exercicio2\Exercicio2\bin\Debug\Exercicio2.exe.config
-C:\Users\marco\OneDrive\Sistemas Distribuidos\Exercicio2\Exercicio2\bin\Debug\Exercicio2.exe
-C:\Users\marco\OneDrive\Sistemas Distribuidos\Exercicio2\Exercicio2\bin\Debug\Exercicio2.pdb
-C:\Users\marco\OneDrive\Sistemas Distribuidos\Exercicio2\Exercicio2\obj\Debug\Exercicio2.csprojResolveAssemblyReference.cache
-C:\Users\marco\OneDrive\Sistemas Distribuidos\Exercicio2\Exercicio2\obj\Debug\Exercicio2.exe
-C:\Users\marco\OneDrive\Sistemas Distribuidos\Exercicio2\Exercicio2\obj\Debug\Exercicio2.pdb
