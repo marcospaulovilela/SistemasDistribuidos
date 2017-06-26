@@ -1,0 +1,6 @@
+C:\Users\marco\OneDrive\Sistemas Distribuidos\TheGraph\Thrift\bin\Debug\TheGraph.Thrift.dll
+C:\Users\marco\OneDrive\Sistemas Distribuidos\TheGraph\Thrift\bin\Debug\TheGraph.Thrift.pdb
+C:\Users\marco\OneDrive\Sistemas Distribuidos\TheGraph\Thrift\obj\Debug\TheGraph.Thrift.csprojResolveAssemblyReference.cache
+C:\Users\marco\OneDrive\Sistemas Distribuidos\TheGraph\Thrift\obj\Debug\TheGraph.Thrift.dll
+C:\Users\marco\OneDrive\Sistemas Distribuidos\TheGraph\Thrift\obj\Debug\TheGraph.Thrift.pdb
+C:\Users\marco\OneDrive\Sistemas Distribuidos\TheGraph\Thrift\bin\Debug\Thrift.pdb
