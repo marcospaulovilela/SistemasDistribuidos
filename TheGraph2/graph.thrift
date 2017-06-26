@@ -52,5 +52,5 @@ service TheGraph{
     list<edge> getEdges(1: vertex V),
     list<vertex> getVertex(1: edge E),
     list<vertex> getNeighborhood(1: vertex V),
-	list<i32> bfs(i32 start, i32 target)
+    list<i32> bfs(i32 target, list<list<i32>> open, list<i32> visited)
 }

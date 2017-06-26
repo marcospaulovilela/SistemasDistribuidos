@@ -122,7 +122,7 @@
             this.txt_Console.Location = new System.Drawing.Point(1, 24);
             this.txt_Console.Name = "txt_Console";
             this.txt_Console.ReadOnly = true;
-            this.txt_Console.Size = new System.Drawing.Size(332, 437);
+            this.txt_Console.Size = new System.Drawing.Size(332, 430);
             this.txt_Console.TabIndex = 0;
             this.txt_Console.Text = "";
             // 

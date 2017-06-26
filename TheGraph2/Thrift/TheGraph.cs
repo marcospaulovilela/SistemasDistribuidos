@@ -38,7 +38,7 @@ namespace TheGraph.Thrift
             List<edge> getEdges(vertex V);
             List<vertex> getVertex(edge E);
             List<vertex> getNeighborhood(vertex V);
-            List<int> bfs(int start, int target);
+            List<int> bfs(int target, List<List<int>> open, List<int> visited);
         }
 
         public interface Iface : ISync
@@ -112,7 +112,7 @@ namespace TheGraph.Thrift
       List<vertex> End_getNeighborhood(IAsyncResult asyncResult);
 #endif
 #if SILVERLIGHT
-      IAsyncResult Begin_bfs(AsyncCallback callback, object state, int start, int target);
+      IAsyncResult Begin_bfs(AsyncCallback callback, object state, int target, List<List<int>> open, List<int> visited);
       List<int> End_bfs(IAsyncResult asyncResult);
 #endif
         }
@@ -133,12 +133,10 @@ namespace TheGraph.Thrift
             protected TProtocol oprot_;
             protected int seqid_;
 
-            public TProtocol InputProtocol
-            {
+            public TProtocol InputProtocol {
                 get { return iprot_; }
             }
-            public TProtocol OutputProtocol
-            {
+            public TProtocol OutputProtocol {
                 get { return oprot_; }
             }
 
@@ -155,16 +153,12 @@ namespace TheGraph.Thrift
 
             protected virtual void Dispose(bool disposing)
             {
-                if (!_IsDisposed)
-                {
-                    if (disposing)
-                    {
-                        if (iprot_ != null)
-                        {
+                if (!_IsDisposed) {
+                    if (disposing) {
+                        if (iprot_ != null) {
                             ((IDisposable)iprot_).Dispose();
                         }
-                        if (oprot_ != null)
-                        {
+                        if (oprot_ != null) {
                             ((IDisposable)oprot_).Dispose();
                         }
                     }
@@ -222,8 +216,7 @@ namespace TheGraph.Thrift
             public graph recv_G()
             {
                 TMessage msg = iprot_.ReadMessageBegin();
-                if (msg.Type == TMessageType.Exception)
-                {
+                if (msg.Type == TMessageType.Exception) {
                     TApplicationException x = TApplicationException.Read(iprot_);
                     iprot_.ReadMessageEnd();
                     throw x;
@@ -231,8 +224,7 @@ namespace TheGraph.Thrift
                 G_result result = new G_result();
                 result.Read(iprot_);
                 iprot_.ReadMessageEnd();
-                if (result.__isset.success)
-                {
+                if (result.__isset.success) {
                     return result.Success;
                 }
                 throw new TApplicationException(TApplicationException.ExceptionType.MissingResult, "G failed: unknown result");
@@ -286,8 +278,7 @@ namespace TheGraph.Thrift
             public bool recv_createVertex()
             {
                 TMessage msg = iprot_.ReadMessageBegin();
-                if (msg.Type == TMessageType.Exception)
-                {
+                if (msg.Type == TMessageType.Exception) {
                     TApplicationException x = TApplicationException.Read(iprot_);
                     iprot_.ReadMessageEnd();
                     throw x;
@@ -295,12 +286,10 @@ namespace TheGraph.Thrift
                 createVertex_result result = new createVertex_result();
                 result.Read(iprot_);
                 iprot_.ReadMessageEnd();
-                if (result.__isset.success)
-                {
+                if (result.__isset.success) {
                     return result.Success;
                 }
-                if (result.__isset.vae)
-                {
+                if (result.__isset.vae) {
                     throw result.Vae;
                 }
                 throw new TApplicationException(TApplicationException.ExceptionType.MissingResult, "createVertex failed: unknown result");
@@ -354,8 +343,7 @@ namespace TheGraph.Thrift
             public bool recv_createEdge()
             {
                 TMessage msg = iprot_.ReadMessageBegin();
-                if (msg.Type == TMessageType.Exception)
-                {
+                if (msg.Type == TMessageType.Exception) {
                     TApplicationException x = TApplicationException.Read(iprot_);
                     iprot_.ReadMessageEnd();
                     throw x;
@@ -363,16 +351,13 @@ namespace TheGraph.Thrift
                 createEdge_result result = new createEdge_result();
                 result.Read(iprot_);
                 iprot_.ReadMessageEnd();
-                if (result.__isset.success)
-                {
+                if (result.__isset.success) {
                     return result.Success;
                 }
-                if (result.__isset.vde)
-                {
+                if (result.__isset.vde) {
                     throw result.Vde;
                 }
-                if (result.__isset.eae)
-                {
+                if (result.__isset.eae) {
                     throw result.Eae;
                 }
                 throw new TApplicationException(TApplicationException.ExceptionType.MissingResult, "createEdge failed: unknown result");
@@ -426,8 +411,7 @@ namespace TheGraph.Thrift
             public bool recv_createDuplicatedEdge()
             {
                 TMessage msg = iprot_.ReadMessageBegin();
-                if (msg.Type == TMessageType.Exception)
-                {
+                if (msg.Type == TMessageType.Exception) {
                     TApplicationException x = TApplicationException.Read(iprot_);
                     iprot_.ReadMessageEnd();
                     throw x;
@@ -435,8 +419,7 @@ namespace TheGraph.Thrift
                 createDuplicatedEdge_result result = new createDuplicatedEdge_result();
                 result.Read(iprot_);
                 iprot_.ReadMessageEnd();
-                if (result.__isset.success)
-                {
+                if (result.__isset.success) {
                     return result.Success;
                 }
                 throw new TApplicationException(TApplicationException.ExceptionType.MissingResult, "createDuplicatedEdge failed: unknown result");
@@ -490,8 +473,7 @@ namespace TheGraph.Thrift
             public bool recv_deleteVertex()
             {
                 TMessage msg = iprot_.ReadMessageBegin();
-                if (msg.Type == TMessageType.Exception)
-                {
+                if (msg.Type == TMessageType.Exception) {
                     TApplicationException x = TApplicationException.Read(iprot_);
                     iprot_.ReadMessageEnd();
                     throw x;
@@ -499,12 +481,10 @@ namespace TheGraph.Thrift
                 deleteVertex_result result = new deleteVertex_result();
                 result.Read(iprot_);
                 iprot_.ReadMessageEnd();
-                if (result.__isset.success)
-                {
+                if (result.__isset.success) {
                     return result.Success;
                 }
-                if (result.__isset.vde)
-                {
+                if (result.__isset.vde) {
                     throw result.Vde;
                 }
                 throw new TApplicationException(TApplicationException.ExceptionType.MissingResult, "deleteVertex failed: unknown result");
@@ -558,8 +538,7 @@ namespace TheGraph.Thrift
             public bool recv_deleteEdge()
             {
                 TMessage msg = iprot_.ReadMessageBegin();
-                if (msg.Type == TMessageType.Exception)
-                {
+                if (msg.Type == TMessageType.Exception) {
                     TApplicationException x = TApplicationException.Read(iprot_);
                     iprot_.ReadMessageEnd();
                     throw x;
@@ -567,12 +546,10 @@ namespace TheGraph.Thrift
                 deleteEdge_result result = new deleteEdge_result();
                 result.Read(iprot_);
                 iprot_.ReadMessageEnd();
-                if (result.__isset.success)
-                {
+                if (result.__isset.success) {
                     return result.Success;
                 }
-                if (result.__isset.ede)
-                {
+                if (result.__isset.ede) {
                     throw result.Ede;
                 }
                 throw new TApplicationException(TApplicationException.ExceptionType.MissingResult, "deleteEdge failed: unknown result");
@@ -626,8 +603,7 @@ namespace TheGraph.Thrift
             public bool recv_deleteDuplicatedEdge()
             {
                 TMessage msg = iprot_.ReadMessageBegin();
-                if (msg.Type == TMessageType.Exception)
-                {
+                if (msg.Type == TMessageType.Exception) {
                     TApplicationException x = TApplicationException.Read(iprot_);
                     iprot_.ReadMessageEnd();
                     throw x;
@@ -635,8 +611,7 @@ namespace TheGraph.Thrift
                 deleteDuplicatedEdge_result result = new deleteDuplicatedEdge_result();
                 result.Read(iprot_);
                 iprot_.ReadMessageEnd();
-                if (result.__isset.success)
-                {
+                if (result.__isset.success) {
                     return result.Success;
                 }
                 throw new TApplicationException(TApplicationException.ExceptionType.MissingResult, "deleteDuplicatedEdge failed: unknown result");
@@ -690,8 +665,7 @@ namespace TheGraph.Thrift
             public bool recv_updateVertex()
             {
                 TMessage msg = iprot_.ReadMessageBegin();
-                if (msg.Type == TMessageType.Exception)
-                {
+                if (msg.Type == TMessageType.Exception) {
                     TApplicationException x = TApplicationException.Read(iprot_);
                     iprot_.ReadMessageEnd();
                     throw x;
@@ -699,12 +673,10 @@ namespace TheGraph.Thrift
                 updateVertex_result result = new updateVertex_result();
                 result.Read(iprot_);
                 iprot_.ReadMessageEnd();
-                if (result.__isset.success)
-                {
+                if (result.__isset.success) {
                     return result.Success;
                 }
-                if (result.__isset.vde)
-                {
+                if (result.__isset.vde) {
                     throw result.Vde;
                 }
                 throw new TApplicationException(TApplicationException.ExceptionType.MissingResult, "updateVertex failed: unknown result");
@@ -758,8 +730,7 @@ namespace TheGraph.Thrift
             public bool recv_updateEdge()
             {
                 TMessage msg = iprot_.ReadMessageBegin();
-                if (msg.Type == TMessageType.Exception)
-                {
+                if (msg.Type == TMessageType.Exception) {
                     TApplicationException x = TApplicationException.Read(iprot_);
                     iprot_.ReadMessageEnd();
                     throw x;
@@ -767,12 +738,10 @@ namespace TheGraph.Thrift
                 updateEdge_result result = new updateEdge_result();
                 result.Read(iprot_);
                 iprot_.ReadMessageEnd();
-                if (result.__isset.success)
-                {
+                if (result.__isset.success) {
                     return result.Success;
                 }
-                if (result.__isset.ede)
-                {
+                if (result.__isset.ede) {
                     throw result.Ede;
                 }
                 throw new TApplicationException(TApplicationException.ExceptionType.MissingResult, "updateEdge failed: unknown result");
@@ -826,8 +795,7 @@ namespace TheGraph.Thrift
             public bool recv_updateDuplicatedEdge()
             {
                 TMessage msg = iprot_.ReadMessageBegin();
-                if (msg.Type == TMessageType.Exception)
-                {
+                if (msg.Type == TMessageType.Exception) {
                     TApplicationException x = TApplicationException.Read(iprot_);
                     iprot_.ReadMessageEnd();
                     throw x;
@@ -835,8 +803,7 @@ namespace TheGraph.Thrift
                 updateDuplicatedEdge_result result = new updateDuplicatedEdge_result();
                 result.Read(iprot_);
                 iprot_.ReadMessageEnd();
-                if (result.__isset.success)
-                {
+                if (result.__isset.success) {
                     return result.Success;
                 }
                 throw new TApplicationException(TApplicationException.ExceptionType.MissingResult, "updateDuplicatedEdge failed: unknown result");
@@ -890,8 +857,7 @@ namespace TheGraph.Thrift
             public bool recv_copyVertex()
             {
                 TMessage msg = iprot_.ReadMessageBegin();
-                if (msg.Type == TMessageType.Exception)
-                {
+                if (msg.Type == TMessageType.Exception) {
                     TApplicationException x = TApplicationException.Read(iprot_);
                     iprot_.ReadMessageEnd();
                     throw x;
@@ -899,8 +865,7 @@ namespace TheGraph.Thrift
                 copyVertex_result result = new copyVertex_result();
                 result.Read(iprot_);
                 iprot_.ReadMessageEnd();
-                if (result.__isset.success)
-                {
+                if (result.__isset.success) {
                     return result.Success;
                 }
                 throw new TApplicationException(TApplicationException.ExceptionType.MissingResult, "copyVertex failed: unknown result");
@@ -954,8 +919,7 @@ namespace TheGraph.Thrift
             public bool recv_copyEdge()
             {
                 TMessage msg = iprot_.ReadMessageBegin();
-                if (msg.Type == TMessageType.Exception)
-                {
+                if (msg.Type == TMessageType.Exception) {
                     TApplicationException x = TApplicationException.Read(iprot_);
                     iprot_.ReadMessageEnd();
                     throw x;
@@ -963,8 +927,7 @@ namespace TheGraph.Thrift
                 copyEdge_result result = new copyEdge_result();
                 result.Read(iprot_);
                 iprot_.ReadMessageEnd();
-                if (result.__isset.success)
-                {
+                if (result.__isset.success) {
                     return result.Success;
                 }
                 throw new TApplicationException(TApplicationException.ExceptionType.MissingResult, "copyEdge failed: unknown result");
@@ -1018,8 +981,7 @@ namespace TheGraph.Thrift
             public vertex recv_readV()
             {
                 TMessage msg = iprot_.ReadMessageBegin();
-                if (msg.Type == TMessageType.Exception)
-                {
+                if (msg.Type == TMessageType.Exception) {
                     TApplicationException x = TApplicationException.Read(iprot_);
                     iprot_.ReadMessageEnd();
                     throw x;
@@ -1027,12 +989,10 @@ namespace TheGraph.Thrift
                 readV_result result = new readV_result();
                 result.Read(iprot_);
                 iprot_.ReadMessageEnd();
-                if (result.__isset.success)
-                {
+                if (result.__isset.success) {
                     return result.Success;
                 }
-                if (result.__isset.vde)
-                {
+                if (result.__isset.vde) {
                     throw result.Vde;
                 }
                 throw new TApplicationException(TApplicationException.ExceptionType.MissingResult, "readV failed: unknown result");
@@ -1088,8 +1048,7 @@ namespace TheGraph.Thrift
             public edge recv_readE()
             {
                 TMessage msg = iprot_.ReadMessageBegin();
-                if (msg.Type == TMessageType.Exception)
-                {
+                if (msg.Type == TMessageType.Exception) {
                     TApplicationException x = TApplicationException.Read(iprot_);
                     iprot_.ReadMessageEnd();
                     throw x;
@@ -1097,12 +1056,10 @@ namespace TheGraph.Thrift
                 readE_result result = new readE_result();
                 result.Read(iprot_);
                 iprot_.ReadMessageEnd();
-                if (result.__isset.success)
-                {
+                if (result.__isset.success) {
                     return result.Success;
                 }
-                if (result.__isset.ede)
-                {
+                if (result.__isset.ede) {
                     throw result.Ede;
                 }
                 throw new TApplicationException(TApplicationException.ExceptionType.MissingResult, "readE failed: unknown result");
@@ -1156,8 +1113,7 @@ namespace TheGraph.Thrift
             public List<edge> recv_getEdges()
             {
                 TMessage msg = iprot_.ReadMessageBegin();
-                if (msg.Type == TMessageType.Exception)
-                {
+                if (msg.Type == TMessageType.Exception) {
                     TApplicationException x = TApplicationException.Read(iprot_);
                     iprot_.ReadMessageEnd();
                     throw x;
@@ -1165,8 +1121,7 @@ namespace TheGraph.Thrift
                 getEdges_result result = new getEdges_result();
                 result.Read(iprot_);
                 iprot_.ReadMessageEnd();
-                if (result.__isset.success)
-                {
+                if (result.__isset.success) {
                     return result.Success;
                 }
                 throw new TApplicationException(TApplicationException.ExceptionType.MissingResult, "getEdges failed: unknown result");
@@ -1220,8 +1175,7 @@ namespace TheGraph.Thrift
             public List<vertex> recv_getVertex()
             {
                 TMessage msg = iprot_.ReadMessageBegin();
-                if (msg.Type == TMessageType.Exception)
-                {
+                if (msg.Type == TMessageType.Exception) {
                     TApplicationException x = TApplicationException.Read(iprot_);
                     iprot_.ReadMessageEnd();
                     throw x;
@@ -1229,8 +1183,7 @@ namespace TheGraph.Thrift
                 getVertex_result result = new getVertex_result();
                 result.Read(iprot_);
                 iprot_.ReadMessageEnd();
-                if (result.__isset.success)
-                {
+                if (result.__isset.success) {
                     return result.Success;
                 }
                 throw new TApplicationException(TApplicationException.ExceptionType.MissingResult, "getVertex failed: unknown result");
@@ -1284,8 +1237,7 @@ namespace TheGraph.Thrift
             public List<vertex> recv_getNeighborhood()
             {
                 TMessage msg = iprot_.ReadMessageBegin();
-                if (msg.Type == TMessageType.Exception)
-                {
+                if (msg.Type == TMessageType.Exception) {
                     TApplicationException x = TApplicationException.Read(iprot_);
                     iprot_.ReadMessageEnd();
                     throw x;
@@ -1293,8 +1245,7 @@ namespace TheGraph.Thrift
                 getNeighborhood_result result = new getNeighborhood_result();
                 result.Read(iprot_);
                 iprot_.ReadMessageEnd();
-                if (result.__isset.success)
-                {
+                if (result.__isset.success) {
                     return result.Success;
                 }
                 throw new TApplicationException(TApplicationException.ExceptionType.MissingResult, "getNeighborhood failed: unknown result");
@@ -1302,9 +1253,9 @@ namespace TheGraph.Thrift
 
 
 #if SILVERLIGHT
-      public IAsyncResult Begin_bfs(AsyncCallback callback, object state, int start, int target)
+      public IAsyncResult Begin_bfs(AsyncCallback callback, object state, int target, List<List<int>> open, List<int> visited)
       {
-        return send_bfs(callback, state, start, target);
+        return send_bfs(callback, state, target, open, visited);
       }
 
       public List<int> End_bfs(IAsyncResult asyncResult)
@@ -1315,28 +1266,29 @@ namespace TheGraph.Thrift
 
 #endif
 
-            public List<int> bfs(int start, int target)
+            public List<int> bfs(int target, List<List<int>> open, List<int> visited)
             {
 #if !SILVERLIGHT
-                send_bfs(start, target);
+                send_bfs(target, open, visited);
                 return recv_bfs();
 
 #else
-        var asyncResult = Begin_bfs(null, null, start, target);
+        var asyncResult = Begin_bfs(null, null, target, open, visited);
         return End_bfs(asyncResult);
 
 #endif
             }
 #if SILVERLIGHT
-      public IAsyncResult send_bfs(AsyncCallback callback, object state, int start, int target)
+      public IAsyncResult send_bfs(AsyncCallback callback, object state, int target, List<List<int>> open, List<int> visited)
 #else
-            public void send_bfs(int start, int target)
+            public void send_bfs(int target, List<List<int>> open, List<int> visited)
 #endif
             {
                 oprot_.WriteMessageBegin(new TMessage("bfs", TMessageType.Call, seqid_));
                 bfs_args args = new bfs_args();
-                args.Start = start;
                 args.Target = target;
+                args.Open = open;
+                args.Visited = visited;
                 args.Write(oprot_);
                 oprot_.WriteMessageEnd();
 #if SILVERLIGHT
@@ -1349,8 +1301,7 @@ namespace TheGraph.Thrift
             public List<int> recv_bfs()
             {
                 TMessage msg = iprot_.ReadMessageBegin();
-                if (msg.Type == TMessageType.Exception)
-                {
+                if (msg.Type == TMessageType.Exception) {
                     TApplicationException x = TApplicationException.Read(iprot_);
                     iprot_.ReadMessageEnd();
                     throw x;
@@ -1358,8 +1309,7 @@ namespace TheGraph.Thrift
                 bfs_result result = new bfs_result();
                 result.Read(iprot_);
                 iprot_.ReadMessageEnd();
-                if (result.__isset.success)
-                {
+                if (result.__isset.success) {
                     return result.Success;
                 }
                 throw new TApplicationException(TApplicationException.ExceptionType.MissingResult, "bfs failed: unknown result");
@@ -1397,13 +1347,11 @@ namespace TheGraph.Thrift
 
             public bool Process(TProtocol iprot, TProtocol oprot)
             {
-                try
-                {
+                try {
                     TMessage msg = iprot.ReadMessageBegin();
                     ProcessFunction fn;
                     processMap_.TryGetValue(msg.Name, out fn);
-                    if (fn == null)
-                    {
+                    if (fn == null) {
                         TProtocolUtil.Skip(iprot, TType.Struct);
                         iprot.ReadMessageEnd();
                         TApplicationException x = new TApplicationException(TApplicationException.ExceptionType.UnknownMethod, "Invalid method name: '" + msg.Name + "'");
@@ -1414,9 +1362,7 @@ namespace TheGraph.Thrift
                         return true;
                     }
                     fn(msg.SeqID, iprot, oprot);
-                }
-                catch (IOException)
-                {
+                } catch (IOException) {
                     return false;
                 }
                 return true;
@@ -1428,18 +1374,13 @@ namespace TheGraph.Thrift
                 args.Read(iprot);
                 iprot.ReadMessageEnd();
                 G_result result = new G_result();
-                try
-                {
+                try {
                     result.Success = iface_.G(args.Scan);
                     oprot.WriteMessageBegin(new TMessage("G", TMessageType.Reply, seqid));
                     result.Write(oprot);
-                }
-                catch (TTransportException)
-                {
+                } catch (TTransportException) {
                     throw;
-                }
-                catch (Exception ex)
-                {
+                } catch (Exception ex) {
                     Console.Error.WriteLine("Error occurred in processor:");
                     Console.Error.WriteLine(ex.ToString());
                     TApplicationException x = new TApplicationException(TApplicationException.ExceptionType.InternalError, " Internal error.");
@@ -1456,25 +1397,17 @@ namespace TheGraph.Thrift
                 args.Read(iprot);
                 iprot.ReadMessageEnd();
                 createVertex_result result = new createVertex_result();
-                try
-                {
-                    try
-                    {
+                try {
+                    try {
                         result.Success = iface_.createVertex(args.V);
-                    }
-                    catch (VertexAlreadyExists vae)
-                    {
+                    } catch (VertexAlreadyExists vae) {
                         result.Vae = vae;
                     }
                     oprot.WriteMessageBegin(new TMessage("createVertex", TMessageType.Reply, seqid));
                     result.Write(oprot);
-                }
-                catch (TTransportException)
-                {
+                } catch (TTransportException) {
                     throw;
-                }
-                catch (Exception ex)
-                {
+                } catch (Exception ex) {
                     Console.Error.WriteLine("Error occurred in processor:");
                     Console.Error.WriteLine(ex.ToString());
                     TApplicationException x = new TApplicationException(TApplicationException.ExceptionType.InternalError, " Internal error.");
@@ -1491,29 +1424,19 @@ namespace TheGraph.Thrift
                 args.Read(iprot);
                 iprot.ReadMessageEnd();
                 createEdge_result result = new createEdge_result();
-                try
-                {
-                    try
-                    {
+                try {
+                    try {
                         result.Success = iface_.createEdge(args.E);
-                    }
-                    catch (VertexDontExists vde)
-                    {
+                    } catch (VertexDontExists vde) {
                         result.Vde = vde;
-                    }
-                    catch (EdgeAlreadyExists eae)
-                    {
+                    } catch (EdgeAlreadyExists eae) {
                         result.Eae = eae;
                     }
                     oprot.WriteMessageBegin(new TMessage("createEdge", TMessageType.Reply, seqid));
                     result.Write(oprot);
-                }
-                catch (TTransportException)
-                {
+                } catch (TTransportException) {
                     throw;
-                }
-                catch (Exception ex)
-                {
+                } catch (Exception ex) {
                     Console.Error.WriteLine("Error occurred in processor:");
                     Console.Error.WriteLine(ex.ToString());
                     TApplicationException x = new TApplicationException(TApplicationException.ExceptionType.InternalError, " Internal error.");
@@ -1530,18 +1453,13 @@ namespace TheGraph.Thrift
                 args.Read(iprot);
                 iprot.ReadMessageEnd();
                 createDuplicatedEdge_result result = new createDuplicatedEdge_result();
-                try
-                {
+                try {
                     result.Success = iface_.createDuplicatedEdge(args.E);
                     oprot.WriteMessageBegin(new TMessage("createDuplicatedEdge", TMessageType.Reply, seqid));
                     result.Write(oprot);
-                }
-                catch (TTransportException)
-                {
+                } catch (TTransportException) {
                     throw;
-                }
-                catch (Exception ex)
-                {
+                } catch (Exception ex) {
                     Console.Error.WriteLine("Error occurred in processor:");
                     Console.Error.WriteLine(ex.ToString());
                     TApplicationException x = new TApplicationException(TApplicationException.ExceptionType.InternalError, " Internal error.");
@@ -1558,25 +1476,17 @@ namespace TheGraph.Thrift
                 args.Read(iprot);
                 iprot.ReadMessageEnd();
                 deleteVertex_result result = new deleteVertex_result();
-                try
-                {
-                    try
-                    {
+                try {
+                    try {
                         result.Success = iface_.deleteVertex(args.V);
-                    }
-                    catch (VertexDontExists vde)
-                    {
+                    } catch (VertexDontExists vde) {
                         result.Vde = vde;
                     }
                     oprot.WriteMessageBegin(new TMessage("deleteVertex", TMessageType.Reply, seqid));
                     result.Write(oprot);
-                }
-                catch (TTransportException)
-                {
+                } catch (TTransportException) {
                     throw;
-                }
-                catch (Exception ex)
-                {
+                } catch (Exception ex) {
                     Console.Error.WriteLine("Error occurred in processor:");
                     Console.Error.WriteLine(ex.ToString());
                     TApplicationException x = new TApplicationException(TApplicationException.ExceptionType.InternalError, " Internal error.");
@@ -1593,25 +1503,17 @@ namespace TheGraph.Thrift
                 args.Read(iprot);
                 iprot.ReadMessageEnd();
                 deleteEdge_result result = new deleteEdge_result();
-                try
-                {
-                    try
-                    {
+                try {
+                    try {
                         result.Success = iface_.deleteEdge(args.E);
-                    }
-                    catch (EdgeDontExists ede)
-                    {
+                    } catch (EdgeDontExists ede) {
                         result.Ede = ede;
                     }
                     oprot.WriteMessageBegin(new TMessage("deleteEdge", TMessageType.Reply, seqid));
                     result.Write(oprot);
-                }
-                catch (TTransportException)
-                {
+                } catch (TTransportException) {
                     throw;
-                }
-                catch (Exception ex)
-                {
+                } catch (Exception ex) {
                     Console.Error.WriteLine("Error occurred in processor:");
                     Console.Error.WriteLine(ex.ToString());
                     TApplicationException x = new TApplicationException(TApplicationException.ExceptionType.InternalError, " Internal error.");
@@ -1628,18 +1530,13 @@ namespace TheGraph.Thrift
                 args.Read(iprot);
                 iprot.ReadMessageEnd();
                 deleteDuplicatedEdge_result result = new deleteDuplicatedEdge_result();
-                try
-                {
+                try {
                     result.Success = iface_.deleteDuplicatedEdge(args.E);
                     oprot.WriteMessageBegin(new TMessage("deleteDuplicatedEdge", TMessageType.Reply, seqid));
                     result.Write(oprot);
-                }
-                catch (TTransportException)
-                {
+                } catch (TTransportException) {
                     throw;
-                }
-                catch (Exception ex)
-                {
+                } catch (Exception ex) {
                     Console.Error.WriteLine("Error occurred in processor:");
                     Console.Error.WriteLine(ex.ToString());
                     TApplicationException x = new TApplicationException(TApplicationException.ExceptionType.InternalError, " Internal error.");
@@ -1656,25 +1553,17 @@ namespace TheGraph.Thrift
                 args.Read(iprot);
                 iprot.ReadMessageEnd();
                 updateVertex_result result = new updateVertex_result();
-                try
-                {
-                    try
-                    {
+                try {
+                    try {
                         result.Success = iface_.updateVertex(args.V);
-                    }
-                    catch (VertexDontExists vde)
-                    {
+                    } catch (VertexDontExists vde) {
                         result.Vde = vde;
                     }
                     oprot.WriteMessageBegin(new TMessage("updateVertex", TMessageType.Reply, seqid));
                     result.Write(oprot);
-                }
-                catch (TTransportException)
-                {
+                } catch (TTransportException) {
                     throw;
-                }
-                catch (Exception ex)
-                {
+                } catch (Exception ex) {
                     Console.Error.WriteLine("Error occurred in processor:");
                     Console.Error.WriteLine(ex.ToString());
                     TApplicationException x = new TApplicationException(TApplicationException.ExceptionType.InternalError, " Internal error.");
@@ -1691,25 +1580,17 @@ namespace TheGraph.Thrift
                 args.Read(iprot);
                 iprot.ReadMessageEnd();
                 updateEdge_result result = new updateEdge_result();
-                try
-                {
-                    try
-                    {
+                try {
+                    try {
                         result.Success = iface_.updateEdge(args.E);
-                    }
-                    catch (EdgeDontExists ede)
-                    {
+                    } catch (EdgeDontExists ede) {
                         result.Ede = ede;
                     }
                     oprot.WriteMessageBegin(new TMessage("updateEdge", TMessageType.Reply, seqid));
                     result.Write(oprot);
-                }
-                catch (TTransportException)
-                {
+                } catch (TTransportException) {
                     throw;
-                }
-                catch (Exception ex)
-                {
+                } catch (Exception ex) {
                     Console.Error.WriteLine("Error occurred in processor:");
                     Console.Error.WriteLine(ex.ToString());
                     TApplicationException x = new TApplicationException(TApplicationException.ExceptionType.InternalError, " Internal error.");
@@ -1726,18 +1607,13 @@ namespace TheGraph.Thrift
                 args.Read(iprot);
                 iprot.ReadMessageEnd();
                 updateDuplicatedEdge_result result = new updateDuplicatedEdge_result();
-                try
-                {
+                try {
                     result.Success = iface_.updateDuplicatedEdge(args.E);
                     oprot.WriteMessageBegin(new TMessage("updateDuplicatedEdge", TMessageType.Reply, seqid));
                     result.Write(oprot);
-                }
-                catch (TTransportException)
-                {
+                } catch (TTransportException) {
                     throw;
-                }
-                catch (Exception ex)
-                {
+                } catch (Exception ex) {
                     Console.Error.WriteLine("Error occurred in processor:");
                     Console.Error.WriteLine(ex.ToString());
                     TApplicationException x = new TApplicationException(TApplicationException.ExceptionType.InternalError, " Internal error.");
@@ -1754,18 +1630,13 @@ namespace TheGraph.Thrift
                 args.Read(iprot);
                 iprot.ReadMessageEnd();
                 copyVertex_result result = new copyVertex_result();
-                try
-                {
+                try {
                     result.Success = iface_.copyVertex(args.E);
                     oprot.WriteMessageBegin(new TMessage("copyVertex", TMessageType.Reply, seqid));
                     result.Write(oprot);
-                }
-                catch (TTransportException)
-                {
+                } catch (TTransportException) {
                     throw;
-                }
-                catch (Exception ex)
-                {
+                } catch (Exception ex) {
                     Console.Error.WriteLine("Error occurred in processor:");
                     Console.Error.WriteLine(ex.ToString());
                     TApplicationException x = new TApplicationException(TApplicationException.ExceptionType.InternalError, " Internal error.");
@@ -1782,18 +1653,13 @@ namespace TheGraph.Thrift
                 args.Read(iprot);
                 iprot.ReadMessageEnd();
                 copyEdge_result result = new copyEdge_result();
-                try
-                {
+                try {
                     result.Success = iface_.copyEdge(args.V);
                     oprot.WriteMessageBegin(new TMessage("copyEdge", TMessageType.Reply, seqid));
                     result.Write(oprot);
-                }
-                catch (TTransportException)
-                {
+                } catch (TTransportException) {
                     throw;
-                }
-                catch (Exception ex)
-                {
+                } catch (Exception ex) {
                     Console.Error.WriteLine("Error occurred in processor:");
                     Console.Error.WriteLine(ex.ToString());
                     TApplicationException x = new TApplicationException(TApplicationException.ExceptionType.InternalError, " Internal error.");
@@ -1810,25 +1676,17 @@ namespace TheGraph.Thrift
                 args.Read(iprot);
                 iprot.ReadMessageEnd();
                 readV_result result = new readV_result();
-                try
-                {
-                    try
-                    {
+                try {
+                    try {
                         result.Success = iface_.readV(args.Name);
-                    }
-                    catch (VertexDontExists vde)
-                    {
+                    } catch (VertexDontExists vde) {
                         result.Vde = vde;
                     }
                     oprot.WriteMessageBegin(new TMessage("readV", TMessageType.Reply, seqid));
                     result.Write(oprot);
-                }
-                catch (TTransportException)
-                {
+                } catch (TTransportException) {
                     throw;
-                }
-                catch (Exception ex)
-                {
+                } catch (Exception ex) {
                     Console.Error.WriteLine("Error occurred in processor:");
                     Console.Error.WriteLine(ex.ToString());
                     TApplicationException x = new TApplicationException(TApplicationException.ExceptionType.InternalError, " Internal error.");
@@ -1845,25 +1703,17 @@ namespace TheGraph.Thrift
                 args.Read(iprot);
                 iprot.ReadMessageEnd();
                 readE_result result = new readE_result();
-                try
-                {
-                    try
-                    {
+                try {
+                    try {
                         result.Success = iface_.readE(args.V_Name1, args.V_Name2, args.Directed);
-                    }
-                    catch (EdgeDontExists ede)
-                    {
+                    } catch (EdgeDontExists ede) {
                         result.Ede = ede;
                     }
                     oprot.WriteMessageBegin(new TMessage("readE", TMessageType.Reply, seqid));
                     result.Write(oprot);
-                }
-                catch (TTransportException)
-                {
+                } catch (TTransportException) {
                     throw;
-                }
-                catch (Exception ex)
-                {
+                } catch (Exception ex) {
                     Console.Error.WriteLine("Error occurred in processor:");
                     Console.Error.WriteLine(ex.ToString());
                     TApplicationException x = new TApplicationException(TApplicationException.ExceptionType.InternalError, " Internal error.");
@@ -1880,18 +1730,13 @@ namespace TheGraph.Thrift
                 args.Read(iprot);
                 iprot.ReadMessageEnd();
                 getEdges_result result = new getEdges_result();
-                try
-                {
+                try {
                     result.Success = iface_.getEdges(args.V);
                     oprot.WriteMessageBegin(new TMessage("getEdges", TMessageType.Reply, seqid));
                     result.Write(oprot);
-                }
-                catch (TTransportException)
-                {
+                } catch (TTransportException) {
                     throw;
-                }
-                catch (Exception ex)
-                {
+                } catch (Exception ex) {
                     Console.Error.WriteLine("Error occurred in processor:");
                     Console.Error.WriteLine(ex.ToString());
                     TApplicationException x = new TApplicationException(TApplicationException.ExceptionType.InternalError, " Internal error.");
@@ -1908,18 +1753,13 @@ namespace TheGraph.Thrift
                 args.Read(iprot);
                 iprot.ReadMessageEnd();
                 getVertex_result result = new getVertex_result();
-                try
-                {
+                try {
                     result.Success = iface_.getVertex(args.E);
                     oprot.WriteMessageBegin(new TMessage("getVertex", TMessageType.Reply, seqid));
                     result.Write(oprot);
-                }
-                catch (TTransportException)
-                {
+                } catch (TTransportException) {
                     throw;
-                }
-                catch (Exception ex)
-                {
+                } catch (Exception ex) {
                     Console.Error.WriteLine("Error occurred in processor:");
                     Console.Error.WriteLine(ex.ToString());
                     TApplicationException x = new TApplicationException(TApplicationException.ExceptionType.InternalError, " Internal error.");
@@ -1936,18 +1776,13 @@ namespace TheGraph.Thrift
                 args.Read(iprot);
                 iprot.ReadMessageEnd();
                 getNeighborhood_result result = new getNeighborhood_result();
-                try
-                {
+                try {
                     result.Success = iface_.getNeighborhood(args.V);
                     oprot.WriteMessageBegin(new TMessage("getNeighborhood", TMessageType.Reply, seqid));
                     result.Write(oprot);
-                }
-                catch (TTransportException)
-                {
+                } catch (TTransportException) {
                     throw;
-                }
-                catch (Exception ex)
-                {
+                } catch (Exception ex) {
                     Console.Error.WriteLine("Error occurred in processor:");
                     Console.Error.WriteLine(ex.ToString());
                     TApplicationException x = new TApplicationException(TApplicationException.ExceptionType.InternalError, " Internal error.");
@@ -1964,18 +1799,13 @@ namespace TheGraph.Thrift
                 args.Read(iprot);
                 iprot.ReadMessageEnd();
                 bfs_result result = new bfs_result();
-                try
-                {
-                    result.Success = iface_.bfs(args.Start, args.Target);
+                try {
+                    result.Success = iface_.bfs(args.Target, args.Open, args.Visited);
                     oprot.WriteMessageBegin(new TMessage("bfs", TMessageType.Reply, seqid));
                     result.Write(oprot);
-                }
-                catch (TTransportException)
-                {
+                } catch (TTransportException) {
                     throw;
-                }
-                catch (Exception ex)
-                {
+                } catch (Exception ex) {
                     Console.Error.WriteLine("Error occurred in processor:");
                     Console.Error.WriteLine(ex.ToString());
                     TApplicationException x = new TApplicationException(TApplicationException.ExceptionType.InternalError, " Internal error.");
@@ -1996,14 +1826,11 @@ namespace TheGraph.Thrift
         {
             private bool _scan;
 
-            public bool Scan
-            {
-                get
-                {
+            public bool Scan {
+                get {
                     return _scan;
                 }
-                set
-                {
+                set {
                     __isset.scan = true;
                     this._scan = value;
                 }
@@ -2026,26 +1853,19 @@ namespace TheGraph.Thrift
             public void Read(TProtocol iprot)
             {
                 iprot.IncrementRecursionDepth();
-                try
-                {
+                try {
                     TField field;
                     iprot.ReadStructBegin();
-                    while (true)
-                    {
+                    while (true) {
                         field = iprot.ReadFieldBegin();
-                        if (field.Type == TType.Stop)
-                        {
+                        if (field.Type == TType.Stop) {
                             break;
                         }
-                        switch (field.ID)
-                        {
+                        switch (field.ID) {
                             case 1:
-                                if (field.Type == TType.Bool)
-                                {
+                                if (field.Type == TType.Bool) {
                                     Scan = iprot.ReadBool();
-                                }
-                                else
-                                {
+                                } else {
                                     TProtocolUtil.Skip(iprot, field.Type);
                                 }
                                 break;
@@ -2056,9 +1876,7 @@ namespace TheGraph.Thrift
                         iprot.ReadFieldEnd();
                     }
                     iprot.ReadStructEnd();
-                }
-                finally
-                {
+                } finally {
                     iprot.DecrementRecursionDepth();
                 }
             }
@@ -2066,13 +1884,11 @@ namespace TheGraph.Thrift
             public void Write(TProtocol oprot)
             {
                 oprot.IncrementRecursionDepth();
-                try
-                {
+                try {
                     TStruct struc = new TStruct("G_args");
                     oprot.WriteStructBegin(struc);
                     TField field = new TField();
-                    if (__isset.scan)
-                    {
+                    if (__isset.scan) {
                         field.Name = "scan";
                         field.Type = TType.Bool;
                         field.ID = 1;
@@ -2082,9 +1898,7 @@ namespace TheGraph.Thrift
                     }
                     oprot.WriteFieldStop();
                     oprot.WriteStructEnd();
-                }
-                finally
-                {
+                } finally {
                     oprot.DecrementRecursionDepth();
                 }
             }
@@ -2093,8 +1907,7 @@ namespace TheGraph.Thrift
             {
                 StringBuilder __sb = new StringBuilder("G_args(");
                 bool __first = true;
-                if (__isset.scan)
-                {
+                if (__isset.scan) {
                     if (!__first) { __sb.Append(", "); }
                     __first = false;
                     __sb.Append("Scan: ");
@@ -2114,14 +1927,11 @@ namespace TheGraph.Thrift
         {
             private graph _success;
 
-            public graph Success
-            {
-                get
-                {
+            public graph Success {
+                get {
                     return _success;
                 }
-                set
-                {
+                set {
                     __isset.success = true;
                     this._success = value;
                 }
@@ -2144,27 +1954,20 @@ namespace TheGraph.Thrift
             public void Read(TProtocol iprot)
             {
                 iprot.IncrementRecursionDepth();
-                try
-                {
+                try {
                     TField field;
                     iprot.ReadStructBegin();
-                    while (true)
-                    {
+                    while (true) {
                         field = iprot.ReadFieldBegin();
-                        if (field.Type == TType.Stop)
-                        {
+                        if (field.Type == TType.Stop) {
                             break;
                         }
-                        switch (field.ID)
-                        {
+                        switch (field.ID) {
                             case 0:
-                                if (field.Type == TType.Struct)
-                                {
+                                if (field.Type == TType.Struct) {
                                     Success = new graph();
                                     Success.Read(iprot);
-                                }
-                                else
-                                {
+                                } else {
                                     TProtocolUtil.Skip(iprot, field.Type);
                                 }
                                 break;
@@ -2175,9 +1978,7 @@ namespace TheGraph.Thrift
                         iprot.ReadFieldEnd();
                     }
                     iprot.ReadStructEnd();
-                }
-                finally
-                {
+                } finally {
                     iprot.DecrementRecursionDepth();
                 }
             }
@@ -2185,16 +1986,13 @@ namespace TheGraph.Thrift
             public void Write(TProtocol oprot)
             {
                 oprot.IncrementRecursionDepth();
-                try
-                {
+                try {
                     TStruct struc = new TStruct("G_result");
                     oprot.WriteStructBegin(struc);
                     TField field = new TField();
 
-                    if (this.__isset.success)
-                    {
-                        if (Success != null)
-                        {
+                    if (this.__isset.success) {
+                        if (Success != null) {
                             field.Name = "Success";
                             field.Type = TType.Struct;
                             field.ID = 0;
@@ -2205,9 +2003,7 @@ namespace TheGraph.Thrift
                     }
                     oprot.WriteFieldStop();
                     oprot.WriteStructEnd();
-                }
-                finally
-                {
+                } finally {
                     oprot.DecrementRecursionDepth();
                 }
             }
@@ -2216,8 +2012,7 @@ namespace TheGraph.Thrift
             {
                 StringBuilder __sb = new StringBuilder("G_result(");
                 bool __first = true;
-                if (Success != null && __isset.success)
-                {
+                if (Success != null && __isset.success) {
                     if (!__first) { __sb.Append(", "); }
                     __first = false;
                     __sb.Append("Success: ");
@@ -2237,14 +2032,11 @@ namespace TheGraph.Thrift
         {
             private vertex _V;
 
-            public vertex V
-            {
-                get
-                {
+            public vertex V {
+                get {
                     return _V;
                 }
-                set
-                {
+                set {
                     __isset.V = true;
                     this._V = value;
                 }
@@ -2267,27 +2059,20 @@ namespace TheGraph.Thrift
             public void Read(TProtocol iprot)
             {
                 iprot.IncrementRecursionDepth();
-                try
-                {
+                try {
                     TField field;
                     iprot.ReadStructBegin();
-                    while (true)
-                    {
+                    while (true) {
                         field = iprot.ReadFieldBegin();
-                        if (field.Type == TType.Stop)
-                        {
+                        if (field.Type == TType.Stop) {
                             break;
                         }
-                        switch (field.ID)
-                        {
+                        switch (field.ID) {
                             case 1:
-                                if (field.Type == TType.Struct)
-                                {
+                                if (field.Type == TType.Struct) {
                                     V = new vertex();
                                     V.Read(iprot);
-                                }
-                                else
-                                {
+                                } else {
                                     TProtocolUtil.Skip(iprot, field.Type);
                                 }
                                 break;
@@ -2298,9 +2083,7 @@ namespace TheGraph.Thrift
                         iprot.ReadFieldEnd();
                     }
                     iprot.ReadStructEnd();
-                }
-                finally
-                {
+                } finally {
                     iprot.DecrementRecursionDepth();
                 }
             }
@@ -2308,13 +2091,11 @@ namespace TheGraph.Thrift
             public void Write(TProtocol oprot)
             {
                 oprot.IncrementRecursionDepth();
-                try
-                {
+                try {
                     TStruct struc = new TStruct("createVertex_args");
                     oprot.WriteStructBegin(struc);
                     TField field = new TField();
-                    if (V != null && __isset.V)
-                    {
+                    if (V != null && __isset.V) {
                         field.Name = "V";
                         field.Type = TType.Struct;
                         field.ID = 1;
@@ -2324,9 +2105,7 @@ namespace TheGraph.Thrift
                     }
                     oprot.WriteFieldStop();
                     oprot.WriteStructEnd();
-                }
-                finally
-                {
+                } finally {
                     oprot.DecrementRecursionDepth();
                 }
             }
@@ -2335,8 +2114,7 @@ namespace TheGraph.Thrift
             {
                 StringBuilder __sb = new StringBuilder("createVertex_args(");
                 bool __first = true;
-                if (V != null && __isset.V)
-                {
+                if (V != null && __isset.V) {
                     if (!__first) { __sb.Append(", "); }
                     __first = false;
                     __sb.Append("V: ");
@@ -2357,27 +2135,21 @@ namespace TheGraph.Thrift
             private bool _success;
             private VertexAlreadyExists _vae;
 
-            public bool Success
-            {
-                get
-                {
+            public bool Success {
+                get {
                     return _success;
                 }
-                set
-                {
+                set {
                     __isset.success = true;
                     this._success = value;
                 }
             }
 
-            public VertexAlreadyExists Vae
-            {
-                get
-                {
+            public VertexAlreadyExists Vae {
+                get {
                     return _vae;
                 }
-                set
-                {
+                set {
                     __isset.vae = true;
                     this._vae = value;
                 }
@@ -2401,37 +2173,27 @@ namespace TheGraph.Thrift
             public void Read(TProtocol iprot)
             {
                 iprot.IncrementRecursionDepth();
-                try
-                {
+                try {
                     TField field;
                     iprot.ReadStructBegin();
-                    while (true)
-                    {
+                    while (true) {
                         field = iprot.ReadFieldBegin();
-                        if (field.Type == TType.Stop)
-                        {
+                        if (field.Type == TType.Stop) {
                             break;
                         }
-                        switch (field.ID)
-                        {
+                        switch (field.ID) {
                             case 0:
-                                if (field.Type == TType.Bool)
-                                {
+                                if (field.Type == TType.Bool) {
                                     Success = iprot.ReadBool();
-                                }
-                                else
-                                {
+                                } else {
                                     TProtocolUtil.Skip(iprot, field.Type);
                                 }
                                 break;
                             case 1:
-                                if (field.Type == TType.Struct)
-                                {
+                                if (field.Type == TType.Struct) {
                                     Vae = new VertexAlreadyExists();
                                     Vae.Read(iprot);
-                                }
-                                else
-                                {
+                                } else {
                                     TProtocolUtil.Skip(iprot, field.Type);
                                 }
                                 break;
@@ -2442,9 +2204,7 @@ namespace TheGraph.Thrift
                         iprot.ReadFieldEnd();
                     }
                     iprot.ReadStructEnd();
-                }
-                finally
-                {
+                } finally {
                     iprot.DecrementRecursionDepth();
                 }
             }
@@ -2452,25 +2212,20 @@ namespace TheGraph.Thrift
             public void Write(TProtocol oprot)
             {
                 oprot.IncrementRecursionDepth();
-                try
-                {
+                try {
                     TStruct struc = new TStruct("createVertex_result");
                     oprot.WriteStructBegin(struc);
                     TField field = new TField();
 
-                    if (this.__isset.success)
-                    {
+                    if (this.__isset.success) {
                         field.Name = "Success";
                         field.Type = TType.Bool;
                         field.ID = 0;
                         oprot.WriteFieldBegin(field);
                         oprot.WriteBool(Success);
                         oprot.WriteFieldEnd();
-                    }
-                    else if (this.__isset.vae)
-                    {
-                        if (Vae != null)
-                        {
+                    } else if (this.__isset.vae) {
+                        if (Vae != null) {
                             field.Name = "Vae";
                             field.Type = TType.Struct;
                             field.ID = 1;
@@ -2481,9 +2236,7 @@ namespace TheGraph.Thrift
                     }
                     oprot.WriteFieldStop();
                     oprot.WriteStructEnd();
-                }
-                finally
-                {
+                } finally {
                     oprot.DecrementRecursionDepth();
                 }
             }
@@ -2492,15 +2245,13 @@ namespace TheGraph.Thrift
             {
                 StringBuilder __sb = new StringBuilder("createVertex_result(");
                 bool __first = true;
-                if (__isset.success)
-                {
+                if (__isset.success) {
                     if (!__first) { __sb.Append(", "); }
                     __first = false;
                     __sb.Append("Success: ");
                     __sb.Append(Success);
                 }
-                if (Vae != null && __isset.vae)
-                {
+                if (Vae != null && __isset.vae) {
                     if (!__first) { __sb.Append(", "); }
                     __first = false;
                     __sb.Append("Vae: ");
@@ -2520,14 +2271,11 @@ namespace TheGraph.Thrift
         {
             private edge _E;
 
-            public edge E
-            {
-                get
-                {
+            public edge E {
+                get {
                     return _E;
                 }
-                set
-                {
+                set {
                     __isset.E = true;
                     this._E = value;
                 }
@@ -2550,27 +2298,20 @@ namespace TheGraph.Thrift
             public void Read(TProtocol iprot)
             {
                 iprot.IncrementRecursionDepth();
-                try
-                {
+                try {
                     TField field;
                     iprot.ReadStructBegin();
-                    while (true)
-                    {
+                    while (true) {
                         field = iprot.ReadFieldBegin();
-                        if (field.Type == TType.Stop)
-                        {
+                        if (field.Type == TType.Stop) {
                             break;
                         }
-                        switch (field.ID)
-                        {
+                        switch (field.ID) {
                             case 1:
-                                if (field.Type == TType.Struct)
-                                {
+                                if (field.Type == TType.Struct) {
                                     E = new edge();
                                     E.Read(iprot);
-                                }
-                                else
-                                {
+                                } else {
                                     TProtocolUtil.Skip(iprot, field.Type);
                                 }
                                 break;
@@ -2581,9 +2322,7 @@ namespace TheGraph.Thrift
                         iprot.ReadFieldEnd();
                     }
                     iprot.ReadStructEnd();
-                }
-                finally
-                {
+                } finally {
                     iprot.DecrementRecursionDepth();
                 }
             }
@@ -2591,13 +2330,11 @@ namespace TheGraph.Thrift
             public void Write(TProtocol oprot)
             {
                 oprot.IncrementRecursionDepth();
-                try
-                {
+                try {
                     TStruct struc = new TStruct("createEdge_args");
                     oprot.WriteStructBegin(struc);
                     TField field = new TField();
-                    if (E != null && __isset.E)
-                    {
+                    if (E != null && __isset.E) {
                         field.Name = "E";
                         field.Type = TType.Struct;
                         field.ID = 1;
@@ -2607,9 +2344,7 @@ namespace TheGraph.Thrift
                     }
                     oprot.WriteFieldStop();
                     oprot.WriteStructEnd();
-                }
-                finally
-                {
+                } finally {
                     oprot.DecrementRecursionDepth();
                 }
             }
@@ -2618,8 +2353,7 @@ namespace TheGraph.Thrift
             {
                 StringBuilder __sb = new StringBuilder("createEdge_args(");
                 bool __first = true;
-                if (E != null && __isset.E)
-                {
+                if (E != null && __isset.E) {
                     if (!__first) { __sb.Append(", "); }
                     __first = false;
                     __sb.Append("E: ");
@@ -2641,40 +2375,31 @@ namespace TheGraph.Thrift
             private VertexDontExists _vde;
             private EdgeAlreadyExists _eae;
 
-            public bool Success
-            {
-                get
-                {
+            public bool Success {
+                get {
                     return _success;
                 }
-                set
-                {
+                set {
                     __isset.success = true;
                     this._success = value;
                 }
             }
 
-            public VertexDontExists Vde
-            {
-                get
-                {
+            public VertexDontExists Vde {
+                get {
                     return _vde;
                 }
-                set
-                {
+                set {
                     __isset.vde = true;
                     this._vde = value;
                 }
             }
 
-            public EdgeAlreadyExists Eae
-            {
-                get
-                {
+            public EdgeAlreadyExists Eae {
+                get {
                     return _eae;
                 }
-                set
-                {
+                set {
                     __isset.eae = true;
                     this._eae = value;
                 }
@@ -2699,48 +2424,35 @@ namespace TheGraph.Thrift
             public void Read(TProtocol iprot)
             {
                 iprot.IncrementRecursionDepth();
-                try
-                {
+                try {
                     TField field;
                     iprot.ReadStructBegin();
-                    while (true)
-                    {
+                    while (true) {
                         field = iprot.ReadFieldBegin();
-                        if (field.Type == TType.Stop)
-                        {
+                        if (field.Type == TType.Stop) {
                             break;
                         }
-                        switch (field.ID)
-                        {
+                        switch (field.ID) {
                             case 0:
-                                if (field.Type == TType.Bool)
-                                {
+                                if (field.Type == TType.Bool) {
                                     Success = iprot.ReadBool();
-                                }
-                                else
-                                {
+                                } else {
                                     TProtocolUtil.Skip(iprot, field.Type);
                                 }
                                 break;
                             case 1:
-                                if (field.Type == TType.Struct)
-                                {
+                                if (field.Type == TType.Struct) {
                                     Vde = new VertexDontExists();
                                     Vde.Read(iprot);
-                                }
-                                else
-                                {
+                                } else {
                                     TProtocolUtil.Skip(iprot, field.Type);
                                 }
                                 break;
                             case 2:
-                                if (field.Type == TType.Struct)
-                                {
+                                if (field.Type == TType.Struct) {
                                     Eae = new EdgeAlreadyExists();
                                     Eae.Read(iprot);
-                                }
-                                else
-                                {
+                                } else {
                                     TProtocolUtil.Skip(iprot, field.Type);
                                 }
                                 break;
@@ -2751,9 +2463,7 @@ namespace TheGraph.Thrift
                         iprot.ReadFieldEnd();
                     }
                     iprot.ReadStructEnd();
-                }
-                finally
-                {
+                } finally {
                     iprot.DecrementRecursionDepth();
                 }
             }
@@ -2761,25 +2471,20 @@ namespace TheGraph.Thrift
             public void Write(TProtocol oprot)
             {
                 oprot.IncrementRecursionDepth();
-                try
-                {
+                try {
                     TStruct struc = new TStruct("createEdge_result");
                     oprot.WriteStructBegin(struc);
                     TField field = new TField();
 
-                    if (this.__isset.success)
-                    {
+                    if (this.__isset.success) {
                         field.Name = "Success";
                         field.Type = TType.Bool;
                         field.ID = 0;
                         oprot.WriteFieldBegin(field);
                         oprot.WriteBool(Success);
                         oprot.WriteFieldEnd();
-                    }
-                    else if (this.__isset.vde)
-                    {
-                        if (Vde != null)
-                        {
+                    } else if (this.__isset.vde) {
+                        if (Vde != null) {
                             field.Name = "Vde";
                             field.Type = TType.Struct;
                             field.ID = 1;
@@ -2787,11 +2492,8 @@ namespace TheGraph.Thrift
                             Vde.Write(oprot);
                             oprot.WriteFieldEnd();
                         }
-                    }
-                    else if (this.__isset.eae)
-                    {
-                        if (Eae != null)
-                        {
+                    } else if (this.__isset.eae) {
+                        if (Eae != null) {
                             field.Name = "Eae";
                             field.Type = TType.Struct;
                             field.ID = 2;
@@ -2802,9 +2504,7 @@ namespace TheGraph.Thrift
                     }
                     oprot.WriteFieldStop();
                     oprot.WriteStructEnd();
-                }
-                finally
-                {
+                } finally {
                     oprot.DecrementRecursionDepth();
                 }
             }
@@ -2813,22 +2513,19 @@ namespace TheGraph.Thrift
             {
                 StringBuilder __sb = new StringBuilder("createEdge_result(");
                 bool __first = true;
-                if (__isset.success)
-                {
+                if (__isset.success) {
                     if (!__first) { __sb.Append(", "); }
                     __first = false;
                     __sb.Append("Success: ");
                     __sb.Append(Success);
                 }
-                if (Vde != null && __isset.vde)
-                {
+                if (Vde != null && __isset.vde) {
                     if (!__first) { __sb.Append(", "); }
                     __first = false;
                     __sb.Append("Vde: ");
                     __sb.Append(Vde == null ? "<null>" : Vde.ToString());
                 }
-                if (Eae != null && __isset.eae)
-                {
+                if (Eae != null && __isset.eae) {
                     if (!__first) { __sb.Append(", "); }
                     __first = false;
                     __sb.Append("Eae: ");
@@ -2848,14 +2545,11 @@ namespace TheGraph.Thrift
         {
             private edge _E;
 
-            public edge E
-            {
-                get
-                {
+            public edge E {
+                get {
                     return _E;
                 }
-                set
-                {
+                set {
                     __isset.E = true;
                     this._E = value;
                 }
@@ -2878,27 +2572,20 @@ namespace TheGraph.Thrift
             public void Read(TProtocol iprot)
             {
                 iprot.IncrementRecursionDepth();
-                try
-                {
+                try {
                     TField field;
                     iprot.ReadStructBegin();
-                    while (true)
-                    {
+                    while (true) {
                         field = iprot.ReadFieldBegin();
-                        if (field.Type == TType.Stop)
-                        {
+                        if (field.Type == TType.Stop) {
                             break;
                         }
-                        switch (field.ID)
-                        {
+                        switch (field.ID) {
                             case 1:
-                                if (field.Type == TType.Struct)
-                                {
+                                if (field.Type == TType.Struct) {
                                     E = new edge();
                                     E.Read(iprot);
-                                }
-                                else
-                                {
+                                } else {
                                     TProtocolUtil.Skip(iprot, field.Type);
                                 }
                                 break;
@@ -2909,9 +2596,7 @@ namespace TheGraph.Thrift
                         iprot.ReadFieldEnd();
                     }
                     iprot.ReadStructEnd();
-                }
-                finally
-                {
+                } finally {
                     iprot.DecrementRecursionDepth();
                 }
             }
@@ -2919,13 +2604,11 @@ namespace TheGraph.Thrift
             public void Write(TProtocol oprot)
             {
                 oprot.IncrementRecursionDepth();
-                try
-                {
+                try {
                     TStruct struc = new TStruct("createDuplicatedEdge_args");
                     oprot.WriteStructBegin(struc);
                     TField field = new TField();
-                    if (E != null && __isset.E)
-                    {
+                    if (E != null && __isset.E) {
                         field.Name = "E";
                         field.Type = TType.Struct;
                         field.ID = 1;
@@ -2935,9 +2618,7 @@ namespace TheGraph.Thrift
                     }
                     oprot.WriteFieldStop();
                     oprot.WriteStructEnd();
-                }
-                finally
-                {
+                } finally {
                     oprot.DecrementRecursionDepth();
                 }
             }
@@ -2946,8 +2627,7 @@ namespace TheGraph.Thrift
             {
                 StringBuilder __sb = new StringBuilder("createDuplicatedEdge_args(");
                 bool __first = true;
-                if (E != null && __isset.E)
-                {
+                if (E != null && __isset.E) {
                     if (!__first) { __sb.Append(", "); }
                     __first = false;
                     __sb.Append("E: ");
@@ -2967,14 +2647,11 @@ namespace TheGraph.Thrift
         {
             private bool _success;
 
-            public bool Success
-            {
-                get
-                {
+            public bool Success {
+                get {
                     return _success;
                 }
-                set
-                {
+                set {
                     __isset.success = true;
                     this._success = value;
                 }
@@ -2997,26 +2674,19 @@ namespace TheGraph.Thrift
             public void Read(TProtocol iprot)
             {
                 iprot.IncrementRecursionDepth();
-                try
-                {
+                try {
                     TField field;
                     iprot.ReadStructBegin();
-                    while (true)
-                    {
+                    while (true) {
                         field = iprot.ReadFieldBegin();
-                        if (field.Type == TType.Stop)
-                        {
+                        if (field.Type == TType.Stop) {
                             break;
                         }
-                        switch (field.ID)
-                        {
+                        switch (field.ID) {
                             case 0:
-                                if (field.Type == TType.Bool)
-                                {
+                                if (field.Type == TType.Bool) {
                                     Success = iprot.ReadBool();
-                                }
-                                else
-                                {
+                                } else {
                                     TProtocolUtil.Skip(iprot, field.Type);
                                 }
                                 break;
@@ -3027,9 +2697,7 @@ namespace TheGraph.Thrift
                         iprot.ReadFieldEnd();
                     }
                     iprot.ReadStructEnd();
-                }
-                finally
-                {
+                } finally {
                     iprot.DecrementRecursionDepth();
                 }
             }
@@ -3037,14 +2705,12 @@ namespace TheGraph.Thrift
             public void Write(TProtocol oprot)
             {
                 oprot.IncrementRecursionDepth();
-                try
-                {
+                try {
                     TStruct struc = new TStruct("createDuplicatedEdge_result");
                     oprot.WriteStructBegin(struc);
                     TField field = new TField();
 
-                    if (this.__isset.success)
-                    {
+                    if (this.__isset.success) {
                         field.Name = "Success";
                         field.Type = TType.Bool;
                         field.ID = 0;
@@ -3054,9 +2720,7 @@ namespace TheGraph.Thrift
                     }
                     oprot.WriteFieldStop();
                     oprot.WriteStructEnd();
-                }
-                finally
-                {
+                } finally {
                     oprot.DecrementRecursionDepth();
                 }
             }
@@ -3065,8 +2729,7 @@ namespace TheGraph.Thrift
             {
                 StringBuilder __sb = new StringBuilder("createDuplicatedEdge_result(");
                 bool __first = true;
-                if (__isset.success)
-                {
+                if (__isset.success) {
                     if (!__first) { __sb.Append(", "); }
                     __first = false;
                     __sb.Append("Success: ");
@@ -3086,14 +2749,11 @@ namespace TheGraph.Thrift
         {
             private vertex _V;
 
-            public vertex V
-            {
-                get
-                {
+            public vertex V {
+                get {
                     return _V;
                 }
-                set
-                {
+                set {
                     __isset.V = true;
                     this._V = value;
                 }
@@ -3116,27 +2776,20 @@ namespace TheGraph.Thrift
             public void Read(TProtocol iprot)
             {
                 iprot.IncrementRecursionDepth();
-                try
-                {
+                try {
                     TField field;
                     iprot.ReadStructBegin();
-                    while (true)
-                    {
+                    while (true) {
                         field = iprot.ReadFieldBegin();
-                        if (field.Type == TType.Stop)
-                        {
+                        if (field.Type == TType.Stop) {
                             break;
                         }
-                        switch (field.ID)
-                        {
+                        switch (field.ID) {
                             case 1:
-                                if (field.Type == TType.Struct)
-                                {
+                                if (field.Type == TType.Struct) {
                                     V = new vertex();
                                     V.Read(iprot);
-                                }
-                                else
-                                {
+                                } else {
                                     TProtocolUtil.Skip(iprot, field.Type);
                                 }
                                 break;
@@ -3147,9 +2800,7 @@ namespace TheGraph.Thrift
                         iprot.ReadFieldEnd();
                     }
                     iprot.ReadStructEnd();
-                }
-                finally
-                {
+                } finally {
                     iprot.DecrementRecursionDepth();
                 }
             }
@@ -3157,13 +2808,11 @@ namespace TheGraph.Thrift
             public void Write(TProtocol oprot)
             {
                 oprot.IncrementRecursionDepth();
-                try
-                {
+                try {
                     TStruct struc = new TStruct("deleteVertex_args");
                     oprot.WriteStructBegin(struc);
                     TField field = new TField();
-                    if (V != null && __isset.V)
-                    {
+                    if (V != null && __isset.V) {
                         field.Name = "V";
                         field.Type = TType.Struct;
                         field.ID = 1;
@@ -3173,9 +2822,7 @@ namespace TheGraph.Thrift
                     }
                     oprot.WriteFieldStop();
                     oprot.WriteStructEnd();
-                }
-                finally
-                {
+                } finally {
                     oprot.DecrementRecursionDepth();
                 }
             }
@@ -3184,8 +2831,7 @@ namespace TheGraph.Thrift
             {
                 StringBuilder __sb = new StringBuilder("deleteVertex_args(");
                 bool __first = true;
-                if (V != null && __isset.V)
-                {
+                if (V != null && __isset.V) {
                     if (!__first) { __sb.Append(", "); }
                     __first = false;
                     __sb.Append("V: ");
@@ -3206,27 +2852,21 @@ namespace TheGraph.Thrift
             private bool _success;
             private VertexDontExists _vde;
 
-            public bool Success
-            {
-                get
-                {
+            public bool Success {
+                get {
                     return _success;
                 }
-                set
-                {
+                set {
                     __isset.success = true;
                     this._success = value;
                 }
             }
 
-            public VertexDontExists Vde
-            {
-                get
-                {
+            public VertexDontExists Vde {
+                get {
                     return _vde;
                 }
-                set
-                {
+                set {
                     __isset.vde = true;
                     this._vde = value;
                 }
@@ -3250,37 +2890,27 @@ namespace TheGraph.Thrift
             public void Read(TProtocol iprot)
             {
                 iprot.IncrementRecursionDepth();
-                try
-                {
+                try {
                     TField field;
                     iprot.ReadStructBegin();
-                    while (true)
-                    {
+                    while (true) {
                         field = iprot.ReadFieldBegin();
-                        if (field.Type == TType.Stop)
-                        {
+                        if (field.Type == TType.Stop) {
                             break;
                         }
-                        switch (field.ID)
-                        {
+                        switch (field.ID) {
                             case 0:
-                                if (field.Type == TType.Bool)
-                                {
+                                if (field.Type == TType.Bool) {
                                     Success = iprot.ReadBool();
-                                }
-                                else
-                                {
+                                } else {
                                     TProtocolUtil.Skip(iprot, field.Type);
                                 }
                                 break;
                             case 1:
-                                if (field.Type == TType.Struct)
-                                {
+                                if (field.Type == TType.Struct) {
                                     Vde = new VertexDontExists();
                                     Vde.Read(iprot);
-                                }
-                                else
-                                {
+                                } else {
                                     TProtocolUtil.Skip(iprot, field.Type);
                                 }
                                 break;
@@ -3291,9 +2921,7 @@ namespace TheGraph.Thrift
                         iprot.ReadFieldEnd();
                     }
                     iprot.ReadStructEnd();
-                }
-                finally
-                {
+                } finally {
                     iprot.DecrementRecursionDepth();
                 }
             }
@@ -3301,25 +2929,20 @@ namespace TheGraph.Thrift
             public void Write(TProtocol oprot)
             {
                 oprot.IncrementRecursionDepth();
-                try
-                {
+                try {
                     TStruct struc = new TStruct("deleteVertex_result");
                     oprot.WriteStructBegin(struc);
                     TField field = new TField();
 
-                    if (this.__isset.success)
-                    {
+                    if (this.__isset.success) {
                         field.Name = "Success";
                         field.Type = TType.Bool;
                         field.ID = 0;
                         oprot.WriteFieldBegin(field);
                         oprot.WriteBool(Success);
                         oprot.WriteFieldEnd();
-                    }
-                    else if (this.__isset.vde)
-                    {
-                        if (Vde != null)
-                        {
+                    } else if (this.__isset.vde) {
+                        if (Vde != null) {
                             field.Name = "Vde";
                             field.Type = TType.Struct;
                             field.ID = 1;
@@ -3330,9 +2953,7 @@ namespace TheGraph.Thrift
                     }
                     oprot.WriteFieldStop();
                     oprot.WriteStructEnd();
-                }
-                finally
-                {
+                } finally {
                     oprot.DecrementRecursionDepth();
                 }
             }
@@ -3341,15 +2962,13 @@ namespace TheGraph.Thrift
             {
                 StringBuilder __sb = new StringBuilder("deleteVertex_result(");
                 bool __first = true;
-                if (__isset.success)
-                {
+                if (__isset.success) {
                     if (!__first) { __sb.Append(", "); }
                     __first = false;
                     __sb.Append("Success: ");
                     __sb.Append(Success);
                 }
-                if (Vde != null && __isset.vde)
-                {
+                if (Vde != null && __isset.vde) {
                     if (!__first) { __sb.Append(", "); }
                     __first = false;
                     __sb.Append("Vde: ");
@@ -3369,14 +2988,11 @@ namespace TheGraph.Thrift
         {
             private edge _E;
 
-            public edge E
-            {
-                get
-                {
+            public edge E {
+                get {
                     return _E;
                 }
-                set
-                {
+                set {
                     __isset.E = true;
                     this._E = value;
                 }
@@ -3399,27 +3015,20 @@ namespace TheGraph.Thrift
             public void Read(TProtocol iprot)
             {
                 iprot.IncrementRecursionDepth();
-                try
-                {
+                try {
                     TField field;
                     iprot.ReadStructBegin();
-                    while (true)
-                    {
+                    while (true) {
                         field = iprot.ReadFieldBegin();
-                        if (field.Type == TType.Stop)
-                        {
+                        if (field.Type == TType.Stop) {
                             break;
                         }
-                        switch (field.ID)
-                        {
+                        switch (field.ID) {
                             case 1:
-                                if (field.Type == TType.Struct)
-                                {
+                                if (field.Type == TType.Struct) {
                                     E = new edge();
                                     E.Read(iprot);
-                                }
-                                else
-                                {
+                                } else {
                                     TProtocolUtil.Skip(iprot, field.Type);
                                 }
                                 break;
@@ -3430,9 +3039,7 @@ namespace TheGraph.Thrift
                         iprot.ReadFieldEnd();
                     }
                     iprot.ReadStructEnd();
-                }
-                finally
-                {
+                } finally {
                     iprot.DecrementRecursionDepth();
                 }
             }
@@ -3440,13 +3047,11 @@ namespace TheGraph.Thrift
             public void Write(TProtocol oprot)
             {
                 oprot.IncrementRecursionDepth();
-                try
-                {
+                try {
                     TStruct struc = new TStruct("deleteEdge_args");
                     oprot.WriteStructBegin(struc);
                     TField field = new TField();
-                    if (E != null && __isset.E)
-                    {
+                    if (E != null && __isset.E) {
                         field.Name = "E";
                         field.Type = TType.Struct;
                         field.ID = 1;
@@ -3456,9 +3061,7 @@ namespace TheGraph.Thrift
                     }
                     oprot.WriteFieldStop();
                     oprot.WriteStructEnd();
-                }
-                finally
-                {
+                } finally {
                     oprot.DecrementRecursionDepth();
                 }
             }
@@ -3467,8 +3070,7 @@ namespace TheGraph.Thrift
             {
                 StringBuilder __sb = new StringBuilder("deleteEdge_args(");
                 bool __first = true;
-                if (E != null && __isset.E)
-                {
+                if (E != null && __isset.E) {
                     if (!__first) { __sb.Append(", "); }
                     __first = false;
                     __sb.Append("E: ");
@@ -3489,27 +3091,21 @@ namespace TheGraph.Thrift
             private bool _success;
             private EdgeDontExists _ede;
 
-            public bool Success
-            {
-                get
-                {
+            public bool Success {
+                get {
                     return _success;
                 }
-                set
-                {
+                set {
                     __isset.success = true;
                     this._success = value;
                 }
             }
 
-            public EdgeDontExists Ede
-            {
-                get
-                {
+            public EdgeDontExists Ede {
+                get {
                     return _ede;
                 }
-                set
-                {
+                set {
                     __isset.ede = true;
                     this._ede = value;
                 }
@@ -3533,37 +3129,27 @@ namespace TheGraph.Thrift
             public void Read(TProtocol iprot)
             {
                 iprot.IncrementRecursionDepth();
-                try
-                {
+                try {
                     TField field;
                     iprot.ReadStructBegin();
-                    while (true)
-                    {
+                    while (true) {
                         field = iprot.ReadFieldBegin();
-                        if (field.Type == TType.Stop)
-                        {
+                        if (field.Type == TType.Stop) {
                             break;
                         }
-                        switch (field.ID)
-                        {
+                        switch (field.ID) {
                             case 0:
-                                if (field.Type == TType.Bool)
-                                {
+                                if (field.Type == TType.Bool) {
                                     Success = iprot.ReadBool();
-                                }
-                                else
-                                {
+                                } else {
                                     TProtocolUtil.Skip(iprot, field.Type);
                                 }
                                 break;
                             case 1:
-                                if (field.Type == TType.Struct)
-                                {
+                                if (field.Type == TType.Struct) {
                                     Ede = new EdgeDontExists();
                                     Ede.Read(iprot);
-                                }
-                                else
-                                {
+                                } else {
                                     TProtocolUtil.Skip(iprot, field.Type);
                                 }
                                 break;
@@ -3574,9 +3160,7 @@ namespace TheGraph.Thrift
                         iprot.ReadFieldEnd();
                     }
                     iprot.ReadStructEnd();
-                }
-                finally
-                {
+                } finally {
                     iprot.DecrementRecursionDepth();
                 }
             }
@@ -3584,25 +3168,20 @@ namespace TheGraph.Thrift
             public void Write(TProtocol oprot)
             {
                 oprot.IncrementRecursionDepth();
-                try
-                {
+                try {
                     TStruct struc = new TStruct("deleteEdge_result");
                     oprot.WriteStructBegin(struc);
                     TField field = new TField();
 
-                    if (this.__isset.success)
-                    {
+                    if (this.__isset.success) {
                         field.Name = "Success";
                         field.Type = TType.Bool;
                         field.ID = 0;
                         oprot.WriteFieldBegin(field);
                         oprot.WriteBool(Success);
                         oprot.WriteFieldEnd();
-                    }
-                    else if (this.__isset.ede)
-                    {
-                        if (Ede != null)
-                        {
+                    } else if (this.__isset.ede) {
+                        if (Ede != null) {
                             field.Name = "Ede";
                             field.Type = TType.Struct;
                             field.ID = 1;
@@ -3613,9 +3192,7 @@ namespace TheGraph.Thrift
                     }
                     oprot.WriteFieldStop();
                     oprot.WriteStructEnd();
-                }
-                finally
-                {
+                } finally {
                     oprot.DecrementRecursionDepth();
                 }
             }
@@ -3624,15 +3201,13 @@ namespace TheGraph.Thrift
             {
                 StringBuilder __sb = new StringBuilder("deleteEdge_result(");
                 bool __first = true;
-                if (__isset.success)
-                {
+                if (__isset.success) {
                     if (!__first) { __sb.Append(", "); }
                     __first = false;
                     __sb.Append("Success: ");
                     __sb.Append(Success);
                 }
-                if (Ede != null && __isset.ede)
-                {
+                if (Ede != null && __isset.ede) {
                     if (!__first) { __sb.Append(", "); }
                     __first = false;
                     __sb.Append("Ede: ");
@@ -3652,14 +3227,11 @@ namespace TheGraph.Thrift
         {
             private edge _E;
 
-            public edge E
-            {
-                get
-                {
+            public edge E {
+                get {
                     return _E;
                 }
-                set
-                {
+                set {
                     __isset.E = true;
                     this._E = value;
                 }
@@ -3682,27 +3254,20 @@ namespace TheGraph.Thrift
             public void Read(TProtocol iprot)
             {
                 iprot.IncrementRecursionDepth();
-                try
-                {
+                try {
                     TField field;
                     iprot.ReadStructBegin();
-                    while (true)
-                    {
+                    while (true) {
                         field = iprot.ReadFieldBegin();
-                        if (field.Type == TType.Stop)
-                        {
+                        if (field.Type == TType.Stop) {
                             break;
                         }
-                        switch (field.ID)
-                        {
+                        switch (field.ID) {
                             case -1:
-                                if (field.Type == TType.Struct)
-                                {
+                                if (field.Type == TType.Struct) {
                                     E = new edge();
                                     E.Read(iprot);
-                                }
-                                else
-                                {
+                                } else {
                                     TProtocolUtil.Skip(iprot, field.Type);
                                 }
                                 break;
@@ -3713,9 +3278,7 @@ namespace TheGraph.Thrift
                         iprot.ReadFieldEnd();
                     }
                     iprot.ReadStructEnd();
-                }
-                finally
-                {
+                } finally {
                     iprot.DecrementRecursionDepth();
                 }
             }
@@ -3723,13 +3286,11 @@ namespace TheGraph.Thrift
             public void Write(TProtocol oprot)
             {
                 oprot.IncrementRecursionDepth();
-                try
-                {
+                try {
                     TStruct struc = new TStruct("deleteDuplicatedEdge_args");
                     oprot.WriteStructBegin(struc);
                     TField field = new TField();
-                    if (E != null && __isset.E)
-                    {
+                    if (E != null && __isset.E) {
                         field.Name = "E";
                         field.Type = TType.Struct;
                         field.ID = -1;
@@ -3739,9 +3300,7 @@ namespace TheGraph.Thrift
                     }
                     oprot.WriteFieldStop();
                     oprot.WriteStructEnd();
-                }
-                finally
-                {
+                } finally {
                     oprot.DecrementRecursionDepth();
                 }
             }
@@ -3750,8 +3309,7 @@ namespace TheGraph.Thrift
             {
                 StringBuilder __sb = new StringBuilder("deleteDuplicatedEdge_args(");
                 bool __first = true;
-                if (E != null && __isset.E)
-                {
+                if (E != null && __isset.E) {
                     if (!__first) { __sb.Append(", "); }
                     __first = false;
                     __sb.Append("E: ");
@@ -3771,14 +3329,11 @@ namespace TheGraph.Thrift
         {
             private bool _success;
 
-            public bool Success
-            {
-                get
-                {
+            public bool Success {
+                get {
                     return _success;
                 }
-                set
-                {
+                set {
                     __isset.success = true;
                     this._success = value;
                 }
@@ -3801,26 +3356,19 @@ namespace TheGraph.Thrift
             public void Read(TProtocol iprot)
             {
                 iprot.IncrementRecursionDepth();
-                try
-                {
+                try {
                     TField field;
                     iprot.ReadStructBegin();
-                    while (true)
-                    {
+                    while (true) {
                         field = iprot.ReadFieldBegin();
-                        if (field.Type == TType.Stop)
-                        {
+                        if (field.Type == TType.Stop) {
                             break;
                         }
-                        switch (field.ID)
-                        {
+                        switch (field.ID) {
                             case 0:
-                                if (field.Type == TType.Bool)
-                                {
+                                if (field.Type == TType.Bool) {
                                     Success = iprot.ReadBool();
-                                }
-                                else
-                                {
+                                } else {
                                     TProtocolUtil.Skip(iprot, field.Type);
                                 }
                                 break;
@@ -3831,9 +3379,7 @@ namespace TheGraph.Thrift
                         iprot.ReadFieldEnd();
                     }
                     iprot.ReadStructEnd();
-                }
-                finally
-                {
+                } finally {
                     iprot.DecrementRecursionDepth();
                 }
             }
@@ -3841,14 +3387,12 @@ namespace TheGraph.Thrift
             public void Write(TProtocol oprot)
             {
                 oprot.IncrementRecursionDepth();
-                try
-                {
+                try {
                     TStruct struc = new TStruct("deleteDuplicatedEdge_result");
                     oprot.WriteStructBegin(struc);
                     TField field = new TField();
 
-                    if (this.__isset.success)
-                    {
+                    if (this.__isset.success) {
                         field.Name = "Success";
                         field.Type = TType.Bool;
                         field.ID = 0;
@@ -3858,9 +3402,7 @@ namespace TheGraph.Thrift
                     }
                     oprot.WriteFieldStop();
                     oprot.WriteStructEnd();
-                }
-                finally
-                {
+                } finally {
                     oprot.DecrementRecursionDepth();
                 }
             }
@@ -3869,8 +3411,7 @@ namespace TheGraph.Thrift
             {
                 StringBuilder __sb = new StringBuilder("deleteDuplicatedEdge_result(");
                 bool __first = true;
-                if (__isset.success)
-                {
+                if (__isset.success) {
                     if (!__first) { __sb.Append(", "); }
                     __first = false;
                     __sb.Append("Success: ");
@@ -3890,14 +3431,11 @@ namespace TheGraph.Thrift
         {
             private vertex _V;
 
-            public vertex V
-            {
-                get
-                {
+            public vertex V {
+                get {
                     return _V;
                 }
-                set
-                {
+                set {
                     __isset.V = true;
                     this._V = value;
                 }
@@ -3920,27 +3458,20 @@ namespace TheGraph.Thrift
             public void Read(TProtocol iprot)
             {
                 iprot.IncrementRecursionDepth();
-                try
-                {
+                try {
                     TField field;
                     iprot.ReadStructBegin();
-                    while (true)
-                    {
+                    while (true) {
                         field = iprot.ReadFieldBegin();
-                        if (field.Type == TType.Stop)
-                        {
+                        if (field.Type == TType.Stop) {
                             break;
                         }
-                        switch (field.ID)
-                        {
+                        switch (field.ID) {
                             case 1:
-                                if (field.Type == TType.Struct)
-                                {
+                                if (field.Type == TType.Struct) {
                                     V = new vertex();
                                     V.Read(iprot);
-                                }
-                                else
-                                {
+                                } else {
                                     TProtocolUtil.Skip(iprot, field.Type);
                                 }
                                 break;
@@ -3951,9 +3482,7 @@ namespace TheGraph.Thrift
                         iprot.ReadFieldEnd();
                     }
                     iprot.ReadStructEnd();
-                }
-                finally
-                {
+                } finally {
                     iprot.DecrementRecursionDepth();
                 }
             }
@@ -3961,13 +3490,11 @@ namespace TheGraph.Thrift
             public void Write(TProtocol oprot)
             {
                 oprot.IncrementRecursionDepth();
-                try
-                {
+                try {
                     TStruct struc = new TStruct("updateVertex_args");
                     oprot.WriteStructBegin(struc);
                     TField field = new TField();
-                    if (V != null && __isset.V)
-                    {
+                    if (V != null && __isset.V) {
                         field.Name = "V";
                         field.Type = TType.Struct;
                         field.ID = 1;
@@ -3977,9 +3504,7 @@ namespace TheGraph.Thrift
                     }
                     oprot.WriteFieldStop();
                     oprot.WriteStructEnd();
-                }
-                finally
-                {
+                } finally {
                     oprot.DecrementRecursionDepth();
                 }
             }
@@ -3988,8 +3513,7 @@ namespace TheGraph.Thrift
             {
                 StringBuilder __sb = new StringBuilder("updateVertex_args(");
                 bool __first = true;
-                if (V != null && __isset.V)
-                {
+                if (V != null && __isset.V) {
                     if (!__first) { __sb.Append(", "); }
                     __first = false;
                     __sb.Append("V: ");
@@ -4010,27 +3534,21 @@ namespace TheGraph.Thrift
             private bool _success;
             private VertexDontExists _vde;
 
-            public bool Success
-            {
-                get
-                {
+            public bool Success {
+                get {
                     return _success;
                 }
-                set
-                {
+                set {
                     __isset.success = true;
                     this._success = value;
                 }
             }
 
-            public VertexDontExists Vde
-            {
-                get
-                {
+            public VertexDontExists Vde {
+                get {
                     return _vde;
                 }
-                set
-                {
+                set {
                     __isset.vde = true;
                     this._vde = value;
                 }
@@ -4054,37 +3572,27 @@ namespace TheGraph.Thrift
             public void Read(TProtocol iprot)
             {
                 iprot.IncrementRecursionDepth();
-                try
-                {
+                try {
                     TField field;
                     iprot.ReadStructBegin();
-                    while (true)
-                    {
+                    while (true) {
                         field = iprot.ReadFieldBegin();
-                        if (field.Type == TType.Stop)
-                        {
+                        if (field.Type == TType.Stop) {
                             break;
                         }
-                        switch (field.ID)
-                        {
+                        switch (field.ID) {
                             case 0:
-                                if (field.Type == TType.Bool)
-                                {
+                                if (field.Type == TType.Bool) {
                                     Success = iprot.ReadBool();
-                                }
-                                else
-                                {
+                                } else {
                                     TProtocolUtil.Skip(iprot, field.Type);
                                 }
                                 break;
                             case 1:
-                                if (field.Type == TType.Struct)
-                                {
+                                if (field.Type == TType.Struct) {
                                     Vde = new VertexDontExists();
                                     Vde.Read(iprot);
-                                }
-                                else
-                                {
+                                } else {
                                     TProtocolUtil.Skip(iprot, field.Type);
                                 }
                                 break;
@@ -4095,9 +3603,7 @@ namespace TheGraph.Thrift
                         iprot.ReadFieldEnd();
                     }
                     iprot.ReadStructEnd();
-                }
-                finally
-                {
+                } finally {
                     iprot.DecrementRecursionDepth();
                 }
             }
@@ -4105,25 +3611,20 @@ namespace TheGraph.Thrift
             public void Write(TProtocol oprot)
             {
                 oprot.IncrementRecursionDepth();
-                try
-                {
+                try {
                     TStruct struc = new TStruct("updateVertex_result");
                     oprot.WriteStructBegin(struc);
                     TField field = new TField();
 
-                    if (this.__isset.success)
-                    {
+                    if (this.__isset.success) {
                         field.Name = "Success";
                         field.Type = TType.Bool;
                         field.ID = 0;
                         oprot.WriteFieldBegin(field);
                         oprot.WriteBool(Success);
                         oprot.WriteFieldEnd();
-                    }
-                    else if (this.__isset.vde)
-                    {
-                        if (Vde != null)
-                        {
+                    } else if (this.__isset.vde) {
+                        if (Vde != null) {
                             field.Name = "Vde";
                             field.Type = TType.Struct;
                             field.ID = 1;
@@ -4134,9 +3635,7 @@ namespace TheGraph.Thrift
                     }
                     oprot.WriteFieldStop();
                     oprot.WriteStructEnd();
-                }
-                finally
-                {
+                } finally {
                     oprot.DecrementRecursionDepth();
                 }
             }
@@ -4145,15 +3644,13 @@ namespace TheGraph.Thrift
             {
                 StringBuilder __sb = new StringBuilder("updateVertex_result(");
                 bool __first = true;
-                if (__isset.success)
-                {
+                if (__isset.success) {
                     if (!__first) { __sb.Append(", "); }
                     __first = false;
                     __sb.Append("Success: ");
                     __sb.Append(Success);
                 }
-                if (Vde != null && __isset.vde)
-                {
+                if (Vde != null && __isset.vde) {
                     if (!__first) { __sb.Append(", "); }
                     __first = false;
                     __sb.Append("Vde: ");
@@ -4173,14 +3670,11 @@ namespace TheGraph.Thrift
         {
             private edge _E;
 
-            public edge E
-            {
-                get
-                {
+            public edge E {
+                get {
                     return _E;
                 }
-                set
-                {
+                set {
                     __isset.E = true;
                     this._E = value;
                 }
@@ -4203,27 +3697,20 @@ namespace TheGraph.Thrift
             public void Read(TProtocol iprot)
             {
                 iprot.IncrementRecursionDepth();
-                try
-                {
+                try {
                     TField field;
                     iprot.ReadStructBegin();
-                    while (true)
-                    {
+                    while (true) {
                         field = iprot.ReadFieldBegin();
-                        if (field.Type == TType.Stop)
-                        {
+                        if (field.Type == TType.Stop) {
                             break;
                         }
-                        switch (field.ID)
-                        {
+                        switch (field.ID) {
                             case 1:
-                                if (field.Type == TType.Struct)
-                                {
+                                if (field.Type == TType.Struct) {
                                     E = new edge();
                                     E.Read(iprot);
-                                }
-                                else
-                                {
+                                } else {
                                     TProtocolUtil.Skip(iprot, field.Type);
                                 }
                                 break;
@@ -4234,9 +3721,7 @@ namespace TheGraph.Thrift
                         iprot.ReadFieldEnd();
                     }
                     iprot.ReadStructEnd();
-                }
-                finally
-                {
+                } finally {
                     iprot.DecrementRecursionDepth();
                 }
             }
@@ -4244,13 +3729,11 @@ namespace TheGraph.Thrift
             public void Write(TProtocol oprot)
             {
                 oprot.IncrementRecursionDepth();
-                try
-                {
+                try {
                     TStruct struc = new TStruct("updateEdge_args");
                     oprot.WriteStructBegin(struc);
                     TField field = new TField();
-                    if (E != null && __isset.E)
-                    {
+                    if (E != null && __isset.E) {
                         field.Name = "E";
                         field.Type = TType.Struct;
                         field.ID = 1;
@@ -4260,9 +3743,7 @@ namespace TheGraph.Thrift
                     }
                     oprot.WriteFieldStop();
                     oprot.WriteStructEnd();
-                }
-                finally
-                {
+                } finally {
                     oprot.DecrementRecursionDepth();
                 }
             }
@@ -4271,8 +3752,7 @@ namespace TheGraph.Thrift
             {
                 StringBuilder __sb = new StringBuilder("updateEdge_args(");
                 bool __first = true;
-                if (E != null && __isset.E)
-                {
+                if (E != null && __isset.E) {
                     if (!__first) { __sb.Append(", "); }
                     __first = false;
                     __sb.Append("E: ");
@@ -4293,27 +3773,21 @@ namespace TheGraph.Thrift
             private bool _success;
             private EdgeDontExists _ede;
 
-            public bool Success
-            {
-                get
-                {
+            public bool Success {
+                get {
                     return _success;
                 }
-                set
-                {
+                set {
                     __isset.success = true;
                     this._success = value;
                 }
             }
 
-            public EdgeDontExists Ede
-            {
-                get
-                {
+            public EdgeDontExists Ede {
+                get {
                     return _ede;
                 }
-                set
-                {
+                set {
                     __isset.ede = true;
                     this._ede = value;
                 }
@@ -4337,37 +3811,27 @@ namespace TheGraph.Thrift
             public void Read(TProtocol iprot)
             {
                 iprot.IncrementRecursionDepth();
-                try
-                {
+                try {
                     TField field;
                     iprot.ReadStructBegin();
-                    while (true)
-                    {
+                    while (true) {
                         field = iprot.ReadFieldBegin();
-                        if (field.Type == TType.Stop)
-                        {
+                        if (field.Type == TType.Stop) {
                             break;
                         }
-                        switch (field.ID)
-                        {
+                        switch (field.ID) {
                             case 0:
-                                if (field.Type == TType.Bool)
-                                {
+                                if (field.Type == TType.Bool) {
                                     Success = iprot.ReadBool();
-                                }
-                                else
-                                {
+                                } else {
                                     TProtocolUtil.Skip(iprot, field.Type);
                                 }
                                 break;
                             case 1:
-                                if (field.Type == TType.Struct)
-                                {
+                                if (field.Type == TType.Struct) {
                                     Ede = new EdgeDontExists();
                                     Ede.Read(iprot);
-                                }
-                                else
-                                {
+                                } else {
                                     TProtocolUtil.Skip(iprot, field.Type);
                                 }
                                 break;
@@ -4378,9 +3842,7 @@ namespace TheGraph.Thrift
                         iprot.ReadFieldEnd();
                     }
                     iprot.ReadStructEnd();
-                }
-                finally
-                {
+                } finally {
                     iprot.DecrementRecursionDepth();
                 }
             }
@@ -4388,25 +3850,20 @@ namespace TheGraph.Thrift
             public void Write(TProtocol oprot)
             {
                 oprot.IncrementRecursionDepth();
-                try
-                {
+                try {
                     TStruct struc = new TStruct("updateEdge_result");
                     oprot.WriteStructBegin(struc);
                     TField field = new TField();
 
-                    if (this.__isset.success)
-                    {
+                    if (this.__isset.success) {
                         field.Name = "Success";
                         field.Type = TType.Bool;
                         field.ID = 0;
                         oprot.WriteFieldBegin(field);
                         oprot.WriteBool(Success);
                         oprot.WriteFieldEnd();
-                    }
-                    else if (this.__isset.ede)
-                    {
-                        if (Ede != null)
-                        {
+                    } else if (this.__isset.ede) {
+                        if (Ede != null) {
                             field.Name = "Ede";
                             field.Type = TType.Struct;
                             field.ID = 1;
@@ -4417,9 +3874,7 @@ namespace TheGraph.Thrift
                     }
                     oprot.WriteFieldStop();
                     oprot.WriteStructEnd();
-                }
-                finally
-                {
+                } finally {
                     oprot.DecrementRecursionDepth();
                 }
             }
@@ -4428,15 +3883,13 @@ namespace TheGraph.Thrift
             {
                 StringBuilder __sb = new StringBuilder("updateEdge_result(");
                 bool __first = true;
-                if (__isset.success)
-                {
+                if (__isset.success) {
                     if (!__first) { __sb.Append(", "); }
                     __first = false;
                     __sb.Append("Success: ");
                     __sb.Append(Success);
                 }
-                if (Ede != null && __isset.ede)
-                {
+                if (Ede != null && __isset.ede) {
                     if (!__first) { __sb.Append(", "); }
                     __first = false;
                     __sb.Append("Ede: ");
@@ -4456,14 +3909,11 @@ namespace TheGraph.Thrift
         {
             private edge _E;
 
-            public edge E
-            {
-                get
-                {
+            public edge E {
+                get {
                     return _E;
                 }
-                set
-                {
+                set {
                     __isset.E = true;
                     this._E = value;
                 }
@@ -4486,27 +3936,20 @@ namespace TheGraph.Thrift
             public void Read(TProtocol iprot)
             {
                 iprot.IncrementRecursionDepth();
-                try
-                {
+                try {
                     TField field;
                     iprot.ReadStructBegin();
-                    while (true)
-                    {
+                    while (true) {
                         field = iprot.ReadFieldBegin();
-                        if (field.Type == TType.Stop)
-                        {
+                        if (field.Type == TType.Stop) {
                             break;
                         }
-                        switch (field.ID)
-                        {
+                        switch (field.ID) {
                             case 1:
-                                if (field.Type == TType.Struct)
-                                {
+                                if (field.Type == TType.Struct) {
                                     E = new edge();
                                     E.Read(iprot);
-                                }
-                                else
-                                {
+                                } else {
                                     TProtocolUtil.Skip(iprot, field.Type);
                                 }
                                 break;
@@ -4517,9 +3960,7 @@ namespace TheGraph.Thrift
                         iprot.ReadFieldEnd();
                     }
                     iprot.ReadStructEnd();
-                }
-                finally
-                {
+                } finally {
                     iprot.DecrementRecursionDepth();
                 }
             }
@@ -4527,13 +3968,11 @@ namespace TheGraph.Thrift
             public void Write(TProtocol oprot)
             {
                 oprot.IncrementRecursionDepth();
-                try
-                {
+                try {
                     TStruct struc = new TStruct("updateDuplicatedEdge_args");
                     oprot.WriteStructBegin(struc);
                     TField field = new TField();
-                    if (E != null && __isset.E)
-                    {
+                    if (E != null && __isset.E) {
                         field.Name = "E";
                         field.Type = TType.Struct;
                         field.ID = 1;
@@ -4543,9 +3982,7 @@ namespace TheGraph.Thrift
                     }
                     oprot.WriteFieldStop();
                     oprot.WriteStructEnd();
-                }
-                finally
-                {
+                } finally {
                     oprot.DecrementRecursionDepth();
                 }
             }
@@ -4554,8 +3991,7 @@ namespace TheGraph.Thrift
             {
                 StringBuilder __sb = new StringBuilder("updateDuplicatedEdge_args(");
                 bool __first = true;
-                if (E != null && __isset.E)
-                {
+                if (E != null && __isset.E) {
                     if (!__first) { __sb.Append(", "); }
                     __first = false;
                     __sb.Append("E: ");
@@ -4575,14 +4011,11 @@ namespace TheGraph.Thrift
         {
             private bool _success;
 
-            public bool Success
-            {
-                get
-                {
+            public bool Success {
+                get {
                     return _success;
                 }
-                set
-                {
+                set {
                     __isset.success = true;
                     this._success = value;
                 }
@@ -4605,26 +4038,19 @@ namespace TheGraph.Thrift
             public void Read(TProtocol iprot)
             {
                 iprot.IncrementRecursionDepth();
-                try
-                {
+                try {
                     TField field;
                     iprot.ReadStructBegin();
-                    while (true)
-                    {
+                    while (true) {
                         field = iprot.ReadFieldBegin();
-                        if (field.Type == TType.Stop)
-                        {
+                        if (field.Type == TType.Stop) {
                             break;
                         }
-                        switch (field.ID)
-                        {
+                        switch (field.ID) {
                             case 0:
-                                if (field.Type == TType.Bool)
-                                {
+                                if (field.Type == TType.Bool) {
                                     Success = iprot.ReadBool();
-                                }
-                                else
-                                {
+                                } else {
                                     TProtocolUtil.Skip(iprot, field.Type);
                                 }
                                 break;
@@ -4635,9 +4061,7 @@ namespace TheGraph.Thrift
                         iprot.ReadFieldEnd();
                     }
                     iprot.ReadStructEnd();
-                }
-                finally
-                {
+                } finally {
                     iprot.DecrementRecursionDepth();
                 }
             }
@@ -4645,14 +4069,12 @@ namespace TheGraph.Thrift
             public void Write(TProtocol oprot)
             {
                 oprot.IncrementRecursionDepth();
-                try
-                {
+                try {
                     TStruct struc = new TStruct("updateDuplicatedEdge_result");
                     oprot.WriteStructBegin(struc);
                     TField field = new TField();
 
-                    if (this.__isset.success)
-                    {
+                    if (this.__isset.success) {
                         field.Name = "Success";
                         field.Type = TType.Bool;
                         field.ID = 0;
@@ -4662,9 +4084,7 @@ namespace TheGraph.Thrift
                     }
                     oprot.WriteFieldStop();
                     oprot.WriteStructEnd();
-                }
-                finally
-                {
+                } finally {
                     oprot.DecrementRecursionDepth();
                 }
             }
@@ -4673,8 +4093,7 @@ namespace TheGraph.Thrift
             {
                 StringBuilder __sb = new StringBuilder("updateDuplicatedEdge_result(");
                 bool __first = true;
-                if (__isset.success)
-                {
+                if (__isset.success) {
                     if (!__first) { __sb.Append(", "); }
                     __first = false;
                     __sb.Append("Success: ");
@@ -4694,14 +4113,11 @@ namespace TheGraph.Thrift
         {
             private vertex _E;
 
-            public vertex E
-            {
-                get
-                {
+            public vertex E {
+                get {
                     return _E;
                 }
-                set
-                {
+                set {
                     __isset.E = true;
                     this._E = value;
                 }
@@ -4724,27 +4140,20 @@ namespace TheGraph.Thrift
             public void Read(TProtocol iprot)
             {
                 iprot.IncrementRecursionDepth();
-                try
-                {
+                try {
                     TField field;
                     iprot.ReadStructBegin();
-                    while (true)
-                    {
+                    while (true) {
                         field = iprot.ReadFieldBegin();
-                        if (field.Type == TType.Stop)
-                        {
+                        if (field.Type == TType.Stop) {
                             break;
                         }
-                        switch (field.ID)
-                        {
+                        switch (field.ID) {
                             case 1:
-                                if (field.Type == TType.Struct)
-                                {
+                                if (field.Type == TType.Struct) {
                                     E = new vertex();
                                     E.Read(iprot);
-                                }
-                                else
-                                {
+                                } else {
                                     TProtocolUtil.Skip(iprot, field.Type);
                                 }
                                 break;
@@ -4755,9 +4164,7 @@ namespace TheGraph.Thrift
                         iprot.ReadFieldEnd();
                     }
                     iprot.ReadStructEnd();
-                }
-                finally
-                {
+                } finally {
                     iprot.DecrementRecursionDepth();
                 }
             }
@@ -4765,13 +4172,11 @@ namespace TheGraph.Thrift
             public void Write(TProtocol oprot)
             {
                 oprot.IncrementRecursionDepth();
-                try
-                {
+                try {
                     TStruct struc = new TStruct("copyVertex_args");
                     oprot.WriteStructBegin(struc);
                     TField field = new TField();
-                    if (E != null && __isset.E)
-                    {
+                    if (E != null && __isset.E) {
                         field.Name = "E";
                         field.Type = TType.Struct;
                         field.ID = 1;
@@ -4781,9 +4186,7 @@ namespace TheGraph.Thrift
                     }
                     oprot.WriteFieldStop();
                     oprot.WriteStructEnd();
-                }
-                finally
-                {
+                } finally {
                     oprot.DecrementRecursionDepth();
                 }
             }
@@ -4792,8 +4195,7 @@ namespace TheGraph.Thrift
             {
                 StringBuilder __sb = new StringBuilder("copyVertex_args(");
                 bool __first = true;
-                if (E != null && __isset.E)
-                {
+                if (E != null && __isset.E) {
                     if (!__first) { __sb.Append(", "); }
                     __first = false;
                     __sb.Append("E: ");
@@ -4813,14 +4215,11 @@ namespace TheGraph.Thrift
         {
             private bool _success;
 
-            public bool Success
-            {
-                get
-                {
+            public bool Success {
+                get {
                     return _success;
                 }
-                set
-                {
+                set {
                     __isset.success = true;
                     this._success = value;
                 }
@@ -4843,26 +4242,19 @@ namespace TheGraph.Thrift
             public void Read(TProtocol iprot)
             {
                 iprot.IncrementRecursionDepth();
-                try
-                {
+                try {
                     TField field;
                     iprot.ReadStructBegin();
-                    while (true)
-                    {
+                    while (true) {
                         field = iprot.ReadFieldBegin();
-                        if (field.Type == TType.Stop)
-                        {
+                        if (field.Type == TType.Stop) {
                             break;
                         }
-                        switch (field.ID)
-                        {
+                        switch (field.ID) {
                             case 0:
-                                if (field.Type == TType.Bool)
-                                {
+                                if (field.Type == TType.Bool) {
                                     Success = iprot.ReadBool();
-                                }
-                                else
-                                {
+                                } else {
                                     TProtocolUtil.Skip(iprot, field.Type);
                                 }
                                 break;
@@ -4873,9 +4265,7 @@ namespace TheGraph.Thrift
                         iprot.ReadFieldEnd();
                     }
                     iprot.ReadStructEnd();
-                }
-                finally
-                {
+                } finally {
                     iprot.DecrementRecursionDepth();
                 }
             }
@@ -4883,14 +4273,12 @@ namespace TheGraph.Thrift
             public void Write(TProtocol oprot)
             {
                 oprot.IncrementRecursionDepth();
-                try
-                {
+                try {
                     TStruct struc = new TStruct("copyVertex_result");
                     oprot.WriteStructBegin(struc);
                     TField field = new TField();
 
-                    if (this.__isset.success)
-                    {
+                    if (this.__isset.success) {
                         field.Name = "Success";
                         field.Type = TType.Bool;
                         field.ID = 0;
@@ -4900,9 +4288,7 @@ namespace TheGraph.Thrift
                     }
                     oprot.WriteFieldStop();
                     oprot.WriteStructEnd();
-                }
-                finally
-                {
+                } finally {
                     oprot.DecrementRecursionDepth();
                 }
             }
@@ -4911,8 +4297,7 @@ namespace TheGraph.Thrift
             {
                 StringBuilder __sb = new StringBuilder("copyVertex_result(");
                 bool __first = true;
-                if (__isset.success)
-                {
+                if (__isset.success) {
                     if (!__first) { __sb.Append(", "); }
                     __first = false;
                     __sb.Append("Success: ");
@@ -4932,14 +4317,11 @@ namespace TheGraph.Thrift
         {
             private edge _V;
 
-            public edge V
-            {
-                get
-                {
+            public edge V {
+                get {
                     return _V;
                 }
-                set
-                {
+                set {
                     __isset.V = true;
                     this._V = value;
                 }
@@ -4962,27 +4344,20 @@ namespace TheGraph.Thrift
             public void Read(TProtocol iprot)
             {
                 iprot.IncrementRecursionDepth();
-                try
-                {
+                try {
                     TField field;
                     iprot.ReadStructBegin();
-                    while (true)
-                    {
+                    while (true) {
                         field = iprot.ReadFieldBegin();
-                        if (field.Type == TType.Stop)
-                        {
+                        if (field.Type == TType.Stop) {
                             break;
                         }
-                        switch (field.ID)
-                        {
+                        switch (field.ID) {
                             case 1:
-                                if (field.Type == TType.Struct)
-                                {
+                                if (field.Type == TType.Struct) {
                                     V = new edge();
                                     V.Read(iprot);
-                                }
-                                else
-                                {
+                                } else {
                                     TProtocolUtil.Skip(iprot, field.Type);
                                 }
                                 break;
@@ -4993,9 +4368,7 @@ namespace TheGraph.Thrift
                         iprot.ReadFieldEnd();
                     }
                     iprot.ReadStructEnd();
-                }
-                finally
-                {
+                } finally {
                     iprot.DecrementRecursionDepth();
                 }
             }
@@ -5003,13 +4376,11 @@ namespace TheGraph.Thrift
             public void Write(TProtocol oprot)
             {
                 oprot.IncrementRecursionDepth();
-                try
-                {
+                try {
                     TStruct struc = new TStruct("copyEdge_args");
                     oprot.WriteStructBegin(struc);
                     TField field = new TField();
-                    if (V != null && __isset.V)
-                    {
+                    if (V != null && __isset.V) {
                         field.Name = "V";
                         field.Type = TType.Struct;
                         field.ID = 1;
@@ -5019,9 +4390,7 @@ namespace TheGraph.Thrift
                     }
                     oprot.WriteFieldStop();
                     oprot.WriteStructEnd();
-                }
-                finally
-                {
+                } finally {
                     oprot.DecrementRecursionDepth();
                 }
             }
@@ -5030,8 +4399,7 @@ namespace TheGraph.Thrift
             {
                 StringBuilder __sb = new StringBuilder("copyEdge_args(");
                 bool __first = true;
-                if (V != null && __isset.V)
-                {
+                if (V != null && __isset.V) {
                     if (!__first) { __sb.Append(", "); }
                     __first = false;
                     __sb.Append("V: ");
@@ -5051,14 +4419,11 @@ namespace TheGraph.Thrift
         {
             private bool _success;
 
-            public bool Success
-            {
-                get
-                {
+            public bool Success {
+                get {
                     return _success;
                 }
-                set
-                {
+                set {
                     __isset.success = true;
                     this._success = value;
                 }
@@ -5081,26 +4446,19 @@ namespace TheGraph.Thrift
             public void Read(TProtocol iprot)
             {
                 iprot.IncrementRecursionDepth();
-                try
-                {
+                try {
                     TField field;
                     iprot.ReadStructBegin();
-                    while (true)
-                    {
+                    while (true) {
                         field = iprot.ReadFieldBegin();
-                        if (field.Type == TType.Stop)
-                        {
+                        if (field.Type == TType.Stop) {
                             break;
                         }
-                        switch (field.ID)
-                        {
+                        switch (field.ID) {
                             case 0:
-                                if (field.Type == TType.Bool)
-                                {
+                                if (field.Type == TType.Bool) {
                                     Success = iprot.ReadBool();
-                                }
-                                else
-                                {
+                                } else {
                                     TProtocolUtil.Skip(iprot, field.Type);
                                 }
                                 break;
@@ -5111,9 +4469,7 @@ namespace TheGraph.Thrift
                         iprot.ReadFieldEnd();
                     }
                     iprot.ReadStructEnd();
-                }
-                finally
-                {
+                } finally {
                     iprot.DecrementRecursionDepth();
                 }
             }
@@ -5121,14 +4477,12 @@ namespace TheGraph.Thrift
             public void Write(TProtocol oprot)
             {
                 oprot.IncrementRecursionDepth();
-                try
-                {
+                try {
                     TStruct struc = new TStruct("copyEdge_result");
                     oprot.WriteStructBegin(struc);
                     TField field = new TField();
 
-                    if (this.__isset.success)
-                    {
+                    if (this.__isset.success) {
                         field.Name = "Success";
                         field.Type = TType.Bool;
                         field.ID = 0;
@@ -5138,9 +4492,7 @@ namespace TheGraph.Thrift
                     }
                     oprot.WriteFieldStop();
                     oprot.WriteStructEnd();
-                }
-                finally
-                {
+                } finally {
                     oprot.DecrementRecursionDepth();
                 }
             }
@@ -5149,8 +4501,7 @@ namespace TheGraph.Thrift
             {
                 StringBuilder __sb = new StringBuilder("copyEdge_result(");
                 bool __first = true;
-                if (__isset.success)
-                {
+                if (__isset.success) {
                     if (!__first) { __sb.Append(", "); }
                     __first = false;
                     __sb.Append("Success: ");
@@ -5170,14 +4521,11 @@ namespace TheGraph.Thrift
         {
             private int _name;
 
-            public int Name
-            {
-                get
-                {
+            public int Name {
+                get {
                     return _name;
                 }
-                set
-                {
+                set {
                     __isset.name = true;
                     this._name = value;
                 }
@@ -5200,26 +4548,19 @@ namespace TheGraph.Thrift
             public void Read(TProtocol iprot)
             {
                 iprot.IncrementRecursionDepth();
-                try
-                {
+                try {
                     TField field;
                     iprot.ReadStructBegin();
-                    while (true)
-                    {
+                    while (true) {
                         field = iprot.ReadFieldBegin();
-                        if (field.Type == TType.Stop)
-                        {
+                        if (field.Type == TType.Stop) {
                             break;
                         }
-                        switch (field.ID)
-                        {
+                        switch (field.ID) {
                             case 1:
-                                if (field.Type == TType.I32)
-                                {
+                                if (field.Type == TType.I32) {
                                     Name = iprot.ReadI32();
-                                }
-                                else
-                                {
+                                } else {
                                     TProtocolUtil.Skip(iprot, field.Type);
                                 }
                                 break;
@@ -5230,9 +4571,7 @@ namespace TheGraph.Thrift
                         iprot.ReadFieldEnd();
                     }
                     iprot.ReadStructEnd();
-                }
-                finally
-                {
+                } finally {
                     iprot.DecrementRecursionDepth();
                 }
             }
@@ -5240,13 +4579,11 @@ namespace TheGraph.Thrift
             public void Write(TProtocol oprot)
             {
                 oprot.IncrementRecursionDepth();
-                try
-                {
+                try {
                     TStruct struc = new TStruct("readV_args");
                     oprot.WriteStructBegin(struc);
                     TField field = new TField();
-                    if (__isset.name)
-                    {
+                    if (__isset.name) {
                         field.Name = "name";
                         field.Type = TType.I32;
                         field.ID = 1;
@@ -5256,9 +4593,7 @@ namespace TheGraph.Thrift
                     }
                     oprot.WriteFieldStop();
                     oprot.WriteStructEnd();
-                }
-                finally
-                {
+                } finally {
                     oprot.DecrementRecursionDepth();
                 }
             }
@@ -5267,8 +4602,7 @@ namespace TheGraph.Thrift
             {
                 StringBuilder __sb = new StringBuilder("readV_args(");
                 bool __first = true;
-                if (__isset.name)
-                {
+                if (__isset.name) {
                     if (!__first) { __sb.Append(", "); }
                     __first = false;
                     __sb.Append("Name: ");
@@ -5289,27 +4623,21 @@ namespace TheGraph.Thrift
             private vertex _success;
             private VertexDontExists _vde;
 
-            public vertex Success
-            {
-                get
-                {
+            public vertex Success {
+                get {
                     return _success;
                 }
-                set
-                {
+                set {
                     __isset.success = true;
                     this._success = value;
                 }
             }
 
-            public VertexDontExists Vde
-            {
-                get
-                {
+            public VertexDontExists Vde {
+                get {
                     return _vde;
                 }
-                set
-                {
+                set {
                     __isset.vde = true;
                     this._vde = value;
                 }
@@ -5333,38 +4661,28 @@ namespace TheGraph.Thrift
             public void Read(TProtocol iprot)
             {
                 iprot.IncrementRecursionDepth();
-                try
-                {
+                try {
                     TField field;
                     iprot.ReadStructBegin();
-                    while (true)
-                    {
+                    while (true) {
                         field = iprot.ReadFieldBegin();
-                        if (field.Type == TType.Stop)
-                        {
+                        if (field.Type == TType.Stop) {
                             break;
                         }
-                        switch (field.ID)
-                        {
+                        switch (field.ID) {
                             case 0:
-                                if (field.Type == TType.Struct)
-                                {
+                                if (field.Type == TType.Struct) {
                                     Success = new vertex();
                                     Success.Read(iprot);
-                                }
-                                else
-                                {
+                                } else {
                                     TProtocolUtil.Skip(iprot, field.Type);
                                 }
                                 break;
                             case 1:
-                                if (field.Type == TType.Struct)
-                                {
+                                if (field.Type == TType.Struct) {
                                     Vde = new VertexDontExists();
                                     Vde.Read(iprot);
-                                }
-                                else
-                                {
+                                } else {
                                     TProtocolUtil.Skip(iprot, field.Type);
                                 }
                                 break;
@@ -5375,9 +4693,7 @@ namespace TheGraph.Thrift
                         iprot.ReadFieldEnd();
                     }
                     iprot.ReadStructEnd();
-                }
-                finally
-                {
+                } finally {
                     iprot.DecrementRecursionDepth();
                 }
             }
@@ -5385,16 +4701,13 @@ namespace TheGraph.Thrift
             public void Write(TProtocol oprot)
             {
                 oprot.IncrementRecursionDepth();
-                try
-                {
+                try {
                     TStruct struc = new TStruct("readV_result");
                     oprot.WriteStructBegin(struc);
                     TField field = new TField();
 
-                    if (this.__isset.success)
-                    {
-                        if (Success != null)
-                        {
+                    if (this.__isset.success) {
+                        if (Success != null) {
                             field.Name = "Success";
                             field.Type = TType.Struct;
                             field.ID = 0;
@@ -5402,11 +4715,8 @@ namespace TheGraph.Thrift
                             Success.Write(oprot);
                             oprot.WriteFieldEnd();
                         }
-                    }
-                    else if (this.__isset.vde)
-                    {
-                        if (Vde != null)
-                        {
+                    } else if (this.__isset.vde) {
+                        if (Vde != null) {
                             field.Name = "Vde";
                             field.Type = TType.Struct;
                             field.ID = 1;
@@ -5417,9 +4727,7 @@ namespace TheGraph.Thrift
                     }
                     oprot.WriteFieldStop();
                     oprot.WriteStructEnd();
-                }
-                finally
-                {
+                } finally {
                     oprot.DecrementRecursionDepth();
                 }
             }
@@ -5428,15 +4736,13 @@ namespace TheGraph.Thrift
             {
                 StringBuilder __sb = new StringBuilder("readV_result(");
                 bool __first = true;
-                if (Success != null && __isset.success)
-                {
+                if (Success != null && __isset.success) {
                     if (!__first) { __sb.Append(", "); }
                     __first = false;
                     __sb.Append("Success: ");
                     __sb.Append(Success == null ? "<null>" : Success.ToString());
                 }
-                if (Vde != null && __isset.vde)
-                {
+                if (Vde != null && __isset.vde) {
                     if (!__first) { __sb.Append(", "); }
                     __first = false;
                     __sb.Append("Vde: ");
@@ -5458,40 +4764,31 @@ namespace TheGraph.Thrift
             private int _V_Name2;
             private bool _directed;
 
-            public int V_Name1
-            {
-                get
-                {
+            public int V_Name1 {
+                get {
                     return _V_Name1;
                 }
-                set
-                {
+                set {
                     __isset.V_Name1 = true;
                     this._V_Name1 = value;
                 }
             }
 
-            public int V_Name2
-            {
-                get
-                {
+            public int V_Name2 {
+                get {
                     return _V_Name2;
                 }
-                set
-                {
+                set {
                     __isset.V_Name2 = true;
                     this._V_Name2 = value;
                 }
             }
 
-            public bool Directed
-            {
-                get
-                {
+            public bool Directed {
+                get {
                     return _directed;
                 }
-                set
-                {
+                set {
                     __isset.directed = true;
                     this._directed = value;
                 }
@@ -5516,46 +4813,33 @@ namespace TheGraph.Thrift
             public void Read(TProtocol iprot)
             {
                 iprot.IncrementRecursionDepth();
-                try
-                {
+                try {
                     TField field;
                     iprot.ReadStructBegin();
-                    while (true)
-                    {
+                    while (true) {
                         field = iprot.ReadFieldBegin();
-                        if (field.Type == TType.Stop)
-                        {
+                        if (field.Type == TType.Stop) {
                             break;
                         }
-                        switch (field.ID)
-                        {
+                        switch (field.ID) {
                             case 1:
-                                if (field.Type == TType.I32)
-                                {
+                                if (field.Type == TType.I32) {
                                     V_Name1 = iprot.ReadI32();
-                                }
-                                else
-                                {
+                                } else {
                                     TProtocolUtil.Skip(iprot, field.Type);
                                 }
                                 break;
                             case 2:
-                                if (field.Type == TType.I32)
-                                {
+                                if (field.Type == TType.I32) {
                                     V_Name2 = iprot.ReadI32();
-                                }
-                                else
-                                {
+                                } else {
                                     TProtocolUtil.Skip(iprot, field.Type);
                                 }
                                 break;
                             case 3:
-                                if (field.Type == TType.Bool)
-                                {
+                                if (field.Type == TType.Bool) {
                                     Directed = iprot.ReadBool();
-                                }
-                                else
-                                {
+                                } else {
                                     TProtocolUtil.Skip(iprot, field.Type);
                                 }
                                 break;
@@ -5566,9 +4850,7 @@ namespace TheGraph.Thrift
                         iprot.ReadFieldEnd();
                     }
                     iprot.ReadStructEnd();
-                }
-                finally
-                {
+                } finally {
                     iprot.DecrementRecursionDepth();
                 }
             }
@@ -5576,13 +4858,11 @@ namespace TheGraph.Thrift
             public void Write(TProtocol oprot)
             {
                 oprot.IncrementRecursionDepth();
-                try
-                {
+                try {
                     TStruct struc = new TStruct("readE_args");
                     oprot.WriteStructBegin(struc);
                     TField field = new TField();
-                    if (__isset.V_Name1)
-                    {
+                    if (__isset.V_Name1) {
                         field.Name = "V_Name1";
                         field.Type = TType.I32;
                         field.ID = 1;
@@ -5590,8 +4870,7 @@ namespace TheGraph.Thrift
                         oprot.WriteI32(V_Name1);
                         oprot.WriteFieldEnd();
                     }
-                    if (__isset.V_Name2)
-                    {
+                    if (__isset.V_Name2) {
                         field.Name = "V_Name2";
                         field.Type = TType.I32;
                         field.ID = 2;
@@ -5599,8 +4878,7 @@ namespace TheGraph.Thrift
                         oprot.WriteI32(V_Name2);
                         oprot.WriteFieldEnd();
                     }
-                    if (__isset.directed)
-                    {
+                    if (__isset.directed) {
                         field.Name = "directed";
                         field.Type = TType.Bool;
                         field.ID = 3;
@@ -5610,9 +4888,7 @@ namespace TheGraph.Thrift
                     }
                     oprot.WriteFieldStop();
                     oprot.WriteStructEnd();
-                }
-                finally
-                {
+                } finally {
                     oprot.DecrementRecursionDepth();
                 }
             }
@@ -5621,22 +4897,19 @@ namespace TheGraph.Thrift
             {
                 StringBuilder __sb = new StringBuilder("readE_args(");
                 bool __first = true;
-                if (__isset.V_Name1)
-                {
+                if (__isset.V_Name1) {
                     if (!__first) { __sb.Append(", "); }
                     __first = false;
                     __sb.Append("V_Name1: ");
                     __sb.Append(V_Name1);
                 }
-                if (__isset.V_Name2)
-                {
+                if (__isset.V_Name2) {
                     if (!__first) { __sb.Append(", "); }
                     __first = false;
                     __sb.Append("V_Name2: ");
                     __sb.Append(V_Name2);
                 }
-                if (__isset.directed)
-                {
+                if (__isset.directed) {
                     if (!__first) { __sb.Append(", "); }
                     __first = false;
                     __sb.Append("Directed: ");
@@ -5657,27 +4930,21 @@ namespace TheGraph.Thrift
             private edge _success;
             private EdgeDontExists _ede;
 
-            public edge Success
-            {
-                get
-                {
+            public edge Success {
+                get {
                     return _success;
                 }
-                set
-                {
+                set {
                     __isset.success = true;
                     this._success = value;
                 }
             }
 
-            public EdgeDontExists Ede
-            {
-                get
-                {
+            public EdgeDontExists Ede {
+                get {
                     return _ede;
                 }
-                set
-                {
+                set {
                     __isset.ede = true;
                     this._ede = value;
                 }
@@ -5701,38 +4968,28 @@ namespace TheGraph.Thrift
             public void Read(TProtocol iprot)
             {
                 iprot.IncrementRecursionDepth();
-                try
-                {
+                try {
                     TField field;
                     iprot.ReadStructBegin();
-                    while (true)
-                    {
+                    while (true) {
                         field = iprot.ReadFieldBegin();
-                        if (field.Type == TType.Stop)
-                        {
+                        if (field.Type == TType.Stop) {
                             break;
                         }
-                        switch (field.ID)
-                        {
+                        switch (field.ID) {
                             case 0:
-                                if (field.Type == TType.Struct)
-                                {
+                                if (field.Type == TType.Struct) {
                                     Success = new edge();
                                     Success.Read(iprot);
-                                }
-                                else
-                                {
+                                } else {
                                     TProtocolUtil.Skip(iprot, field.Type);
                                 }
                                 break;
                             case 1:
-                                if (field.Type == TType.Struct)
-                                {
+                                if (field.Type == TType.Struct) {
                                     Ede = new EdgeDontExists();
                                     Ede.Read(iprot);
-                                }
-                                else
-                                {
+                                } else {
                                     TProtocolUtil.Skip(iprot, field.Type);
                                 }
                                 break;
@@ -5743,9 +5000,7 @@ namespace TheGraph.Thrift
                         iprot.ReadFieldEnd();
                     }
                     iprot.ReadStructEnd();
-                }
-                finally
-                {
+                } finally {
                     iprot.DecrementRecursionDepth();
                 }
             }
@@ -5753,16 +5008,13 @@ namespace TheGraph.Thrift
             public void Write(TProtocol oprot)
             {
                 oprot.IncrementRecursionDepth();
-                try
-                {
+                try {
                     TStruct struc = new TStruct("readE_result");
                     oprot.WriteStructBegin(struc);
                     TField field = new TField();
 
-                    if (this.__isset.success)
-                    {
-                        if (Success != null)
-                        {
+                    if (this.__isset.success) {
+                        if (Success != null) {
                             field.Name = "Success";
                             field.Type = TType.Struct;
                             field.ID = 0;
@@ -5770,11 +5022,8 @@ namespace TheGraph.Thrift
                             Success.Write(oprot);
                             oprot.WriteFieldEnd();
                         }
-                    }
-                    else if (this.__isset.ede)
-                    {
-                        if (Ede != null)
-                        {
+                    } else if (this.__isset.ede) {
+                        if (Ede != null) {
                             field.Name = "Ede";
                             field.Type = TType.Struct;
                             field.ID = 1;
@@ -5785,9 +5034,7 @@ namespace TheGraph.Thrift
                     }
                     oprot.WriteFieldStop();
                     oprot.WriteStructEnd();
-                }
-                finally
-                {
+                } finally {
                     oprot.DecrementRecursionDepth();
                 }
             }
@@ -5796,15 +5043,13 @@ namespace TheGraph.Thrift
             {
                 StringBuilder __sb = new StringBuilder("readE_result(");
                 bool __first = true;
-                if (Success != null && __isset.success)
-                {
+                if (Success != null && __isset.success) {
                     if (!__first) { __sb.Append(", "); }
                     __first = false;
                     __sb.Append("Success: ");
                     __sb.Append(Success == null ? "<null>" : Success.ToString());
                 }
-                if (Ede != null && __isset.ede)
-                {
+                if (Ede != null && __isset.ede) {
                     if (!__first) { __sb.Append(", "); }
                     __first = false;
                     __sb.Append("Ede: ");
@@ -5824,14 +5069,11 @@ namespace TheGraph.Thrift
         {
             private vertex _V;
 
-            public vertex V
-            {
-                get
-                {
+            public vertex V {
+                get {
                     return _V;
                 }
-                set
-                {
+                set {
                     __isset.V = true;
                     this._V = value;
                 }
@@ -5854,27 +5096,20 @@ namespace TheGraph.Thrift
             public void Read(TProtocol iprot)
             {
                 iprot.IncrementRecursionDepth();
-                try
-                {
+                try {
                     TField field;
                     iprot.ReadStructBegin();
-                    while (true)
-                    {
+                    while (true) {
                         field = iprot.ReadFieldBegin();
-                        if (field.Type == TType.Stop)
-                        {
+                        if (field.Type == TType.Stop) {
                             break;
                         }
-                        switch (field.ID)
-                        {
+                        switch (field.ID) {
                             case 1:
-                                if (field.Type == TType.Struct)
-                                {
+                                if (field.Type == TType.Struct) {
                                     V = new vertex();
                                     V.Read(iprot);
-                                }
-                                else
-                                {
+                                } else {
                                     TProtocolUtil.Skip(iprot, field.Type);
                                 }
                                 break;
@@ -5885,9 +5120,7 @@ namespace TheGraph.Thrift
                         iprot.ReadFieldEnd();
                     }
                     iprot.ReadStructEnd();
-                }
-                finally
-                {
+                } finally {
                     iprot.DecrementRecursionDepth();
                 }
             }
@@ -5895,13 +5128,11 @@ namespace TheGraph.Thrift
             public void Write(TProtocol oprot)
             {
                 oprot.IncrementRecursionDepth();
-                try
-                {
+                try {
                     TStruct struc = new TStruct("getEdges_args");
                     oprot.WriteStructBegin(struc);
                     TField field = new TField();
-                    if (V != null && __isset.V)
-                    {
+                    if (V != null && __isset.V) {
                         field.Name = "V";
                         field.Type = TType.Struct;
                         field.ID = 1;
@@ -5911,9 +5142,7 @@ namespace TheGraph.Thrift
                     }
                     oprot.WriteFieldStop();
                     oprot.WriteStructEnd();
-                }
-                finally
-                {
+                } finally {
                     oprot.DecrementRecursionDepth();
                 }
             }
@@ -5922,8 +5151,7 @@ namespace TheGraph.Thrift
             {
                 StringBuilder __sb = new StringBuilder("getEdges_args(");
                 bool __first = true;
-                if (V != null && __isset.V)
-                {
+                if (V != null && __isset.V) {
                     if (!__first) { __sb.Append(", "); }
                     __first = false;
                     __sb.Append("V: ");
@@ -5943,14 +5171,11 @@ namespace TheGraph.Thrift
         {
             private List<edge> _success;
 
-            public List<edge> Success
-            {
-                get
-                {
+            public List<edge> Success {
+                get {
                     return _success;
                 }
-                set
-                {
+                set {
                     __isset.success = true;
                     this._success = value;
                 }
@@ -5973,27 +5198,21 @@ namespace TheGraph.Thrift
             public void Read(TProtocol iprot)
             {
                 iprot.IncrementRecursionDepth();
-                try
-                {
+                try {
                     TField field;
                     iprot.ReadStructBegin();
-                    while (true)
-                    {
+                    while (true) {
                         field = iprot.ReadFieldBegin();
-                        if (field.Type == TType.Stop)
-                        {
+                        if (field.Type == TType.Stop) {
                             break;
                         }
-                        switch (field.ID)
-                        {
+                        switch (field.ID) {
                             case 0:
-                                if (field.Type == TType.List)
-                                {
+                                if (field.Type == TType.List) {
                                     {
                                         Success = new List<edge>();
                                         TList _list8 = iprot.ReadListBegin();
-                                        for (int _i9 = 0; _i9 < _list8.Count; ++_i9)
-                                        {
+                                        for (int _i9 = 0; _i9 < _list8.Count; ++_i9) {
                                             edge _elem10;
                                             _elem10 = new edge();
                                             _elem10.Read(iprot);
@@ -6001,9 +5220,7 @@ namespace TheGraph.Thrift
                                         }
                                         iprot.ReadListEnd();
                                     }
-                                }
-                                else
-                                {
+                                } else {
                                     TProtocolUtil.Skip(iprot, field.Type);
                                 }
                                 break;
@@ -6014,9 +5231,7 @@ namespace TheGraph.Thrift
                         iprot.ReadFieldEnd();
                     }
                     iprot.ReadStructEnd();
-                }
-                finally
-                {
+                } finally {
                     iprot.DecrementRecursionDepth();
                 }
             }
@@ -6024,24 +5239,20 @@ namespace TheGraph.Thrift
             public void Write(TProtocol oprot)
             {
                 oprot.IncrementRecursionDepth();
-                try
-                {
+                try {
                     TStruct struc = new TStruct("getEdges_result");
                     oprot.WriteStructBegin(struc);
                     TField field = new TField();
 
-                    if (this.__isset.success)
-                    {
-                        if (Success != null)
-                        {
+                    if (this.__isset.success) {
+                        if (Success != null) {
                             field.Name = "Success";
                             field.Type = TType.List;
                             field.ID = 0;
                             oprot.WriteFieldBegin(field);
                             {
                                 oprot.WriteListBegin(new TList(TType.Struct, Success.Count));
-                                foreach (edge _iter11 in Success)
-                                {
+                                foreach (edge _iter11 in Success) {
                                     _iter11.Write(oprot);
                                 }
                                 oprot.WriteListEnd();
@@ -6051,9 +5262,7 @@ namespace TheGraph.Thrift
                     }
                     oprot.WriteFieldStop();
                     oprot.WriteStructEnd();
-                }
-                finally
-                {
+                } finally {
                     oprot.DecrementRecursionDepth();
                 }
             }
@@ -6062,8 +5271,7 @@ namespace TheGraph.Thrift
             {
                 StringBuilder __sb = new StringBuilder("getEdges_result(");
                 bool __first = true;
-                if (Success != null && __isset.success)
-                {
+                if (Success != null && __isset.success) {
                     if (!__first) { __sb.Append(", "); }
                     __first = false;
                     __sb.Append("Success: ");
@@ -6083,14 +5291,11 @@ namespace TheGraph.Thrift
         {
             private edge _E;
 
-            public edge E
-            {
-                get
-                {
+            public edge E {
+                get {
                     return _E;
                 }
-                set
-                {
+                set {
                     __isset.E = true;
                     this._E = value;
                 }
@@ -6113,27 +5318,20 @@ namespace TheGraph.Thrift
             public void Read(TProtocol iprot)
             {
                 iprot.IncrementRecursionDepth();
-                try
-                {
+                try {
                     TField field;
                     iprot.ReadStructBegin();
-                    while (true)
-                    {
+                    while (true) {
                         field = iprot.ReadFieldBegin();
-                        if (field.Type == TType.Stop)
-                        {
+                        if (field.Type == TType.Stop) {
                             break;
                         }
-                        switch (field.ID)
-                        {
+                        switch (field.ID) {
                             case 1:
-                                if (field.Type == TType.Struct)
-                                {
+                                if (field.Type == TType.Struct) {
                                     E = new edge();
                                     E.Read(iprot);
-                                }
-                                else
-                                {
+                                } else {
                                     TProtocolUtil.Skip(iprot, field.Type);
                                 }
                                 break;
@@ -6144,9 +5342,7 @@ namespace TheGraph.Thrift
                         iprot.ReadFieldEnd();
                     }
                     iprot.ReadStructEnd();
-                }
-                finally
-                {
+                } finally {
                     iprot.DecrementRecursionDepth();
                 }
             }
@@ -6154,13 +5350,11 @@ namespace TheGraph.Thrift
             public void Write(TProtocol oprot)
             {
                 oprot.IncrementRecursionDepth();
-                try
-                {
+                try {
                     TStruct struc = new TStruct("getVertex_args");
                     oprot.WriteStructBegin(struc);
                     TField field = new TField();
-                    if (E != null && __isset.E)
-                    {
+                    if (E != null && __isset.E) {
                         field.Name = "E";
                         field.Type = TType.Struct;
                         field.ID = 1;
@@ -6170,9 +5364,7 @@ namespace TheGraph.Thrift
                     }
                     oprot.WriteFieldStop();
                     oprot.WriteStructEnd();
-                }
-                finally
-                {
+                } finally {
                     oprot.DecrementRecursionDepth();
                 }
             }
@@ -6181,8 +5373,7 @@ namespace TheGraph.Thrift
             {
                 StringBuilder __sb = new StringBuilder("getVertex_args(");
                 bool __first = true;
-                if (E != null && __isset.E)
-                {
+                if (E != null && __isset.E) {
                     if (!__first) { __sb.Append(", "); }
                     __first = false;
                     __sb.Append("E: ");
@@ -6202,14 +5393,11 @@ namespace TheGraph.Thrift
         {
             private List<vertex> _success;
 
-            public List<vertex> Success
-            {
-                get
-                {
+            public List<vertex> Success {
+                get {
                     return _success;
                 }
-                set
-                {
+                set {
                     __isset.success = true;
                     this._success = value;
                 }
@@ -6232,27 +5420,21 @@ namespace TheGraph.Thrift
             public void Read(TProtocol iprot)
             {
                 iprot.IncrementRecursionDepth();
-                try
-                {
+                try {
                     TField field;
                     iprot.ReadStructBegin();
-                    while (true)
-                    {
+                    while (true) {
                         field = iprot.ReadFieldBegin();
-                        if (field.Type == TType.Stop)
-                        {
+                        if (field.Type == TType.Stop) {
                             break;
                         }
-                        switch (field.ID)
-                        {
+                        switch (field.ID) {
                             case 0:
-                                if (field.Type == TType.List)
-                                {
+                                if (field.Type == TType.List) {
                                     {
                                         Success = new List<vertex>();
                                         TList _list12 = iprot.ReadListBegin();
-                                        for (int _i13 = 0; _i13 < _list12.Count; ++_i13)
-                                        {
+                                        for (int _i13 = 0; _i13 < _list12.Count; ++_i13) {
                                             vertex _elem14;
                                             _elem14 = new vertex();
                                             _elem14.Read(iprot);
@@ -6260,9 +5442,7 @@ namespace TheGraph.Thrift
                                         }
                                         iprot.ReadListEnd();
                                     }
-                                }
-                                else
-                                {
+                                } else {
                                     TProtocolUtil.Skip(iprot, field.Type);
                                 }
                                 break;
@@ -6273,9 +5453,7 @@ namespace TheGraph.Thrift
                         iprot.ReadFieldEnd();
                     }
                     iprot.ReadStructEnd();
-                }
-                finally
-                {
+                } finally {
                     iprot.DecrementRecursionDepth();
                 }
             }
@@ -6283,24 +5461,20 @@ namespace TheGraph.Thrift
             public void Write(TProtocol oprot)
             {
                 oprot.IncrementRecursionDepth();
-                try
-                {
+                try {
                     TStruct struc = new TStruct("getVertex_result");
                     oprot.WriteStructBegin(struc);
                     TField field = new TField();
 
-                    if (this.__isset.success)
-                    {
-                        if (Success != null)
-                        {
+                    if (this.__isset.success) {
+                        if (Success != null) {
                             field.Name = "Success";
                             field.Type = TType.List;
                             field.ID = 0;
                             oprot.WriteFieldBegin(field);
                             {
                                 oprot.WriteListBegin(new TList(TType.Struct, Success.Count));
-                                foreach (vertex _iter15 in Success)
-                                {
+                                foreach (vertex _iter15 in Success) {
                                     _iter15.Write(oprot);
                                 }
                                 oprot.WriteListEnd();
@@ -6310,9 +5484,7 @@ namespace TheGraph.Thrift
                     }
                     oprot.WriteFieldStop();
                     oprot.WriteStructEnd();
-                }
-                finally
-                {
+                } finally {
                     oprot.DecrementRecursionDepth();
                 }
             }
@@ -6321,8 +5493,7 @@ namespace TheGraph.Thrift
             {
                 StringBuilder __sb = new StringBuilder("getVertex_result(");
                 bool __first = true;
-                if (Success != null && __isset.success)
-                {
+                if (Success != null && __isset.success) {
                     if (!__first) { __sb.Append(", "); }
                     __first = false;
                     __sb.Append("Success: ");
@@ -6342,14 +5513,11 @@ namespace TheGraph.Thrift
         {
             private vertex _V;
 
-            public vertex V
-            {
-                get
-                {
+            public vertex V {
+                get {
                     return _V;
                 }
-                set
-                {
+                set {
                     __isset.V = true;
                     this._V = value;
                 }
@@ -6372,27 +5540,20 @@ namespace TheGraph.Thrift
             public void Read(TProtocol iprot)
             {
                 iprot.IncrementRecursionDepth();
-                try
-                {
+                try {
                     TField field;
                     iprot.ReadStructBegin();
-                    while (true)
-                    {
+                    while (true) {
                         field = iprot.ReadFieldBegin();
-                        if (field.Type == TType.Stop)
-                        {
+                        if (field.Type == TType.Stop) {
                             break;
                         }
-                        switch (field.ID)
-                        {
+                        switch (field.ID) {
                             case 1:
-                                if (field.Type == TType.Struct)
-                                {
+                                if (field.Type == TType.Struct) {
                                     V = new vertex();
                                     V.Read(iprot);
-                                }
-                                else
-                                {
+                                } else {
                                     TProtocolUtil.Skip(iprot, field.Type);
                                 }
                                 break;
@@ -6403,9 +5564,7 @@ namespace TheGraph.Thrift
                         iprot.ReadFieldEnd();
                     }
                     iprot.ReadStructEnd();
-                }
-                finally
-                {
+                } finally {
                     iprot.DecrementRecursionDepth();
                 }
             }
@@ -6413,13 +5572,11 @@ namespace TheGraph.Thrift
             public void Write(TProtocol oprot)
             {
                 oprot.IncrementRecursionDepth();
-                try
-                {
+                try {
                     TStruct struc = new TStruct("getNeighborhood_args");
                     oprot.WriteStructBegin(struc);
                     TField field = new TField();
-                    if (V != null && __isset.V)
-                    {
+                    if (V != null && __isset.V) {
                         field.Name = "V";
                         field.Type = TType.Struct;
                         field.ID = 1;
@@ -6429,9 +5586,7 @@ namespace TheGraph.Thrift
                     }
                     oprot.WriteFieldStop();
                     oprot.WriteStructEnd();
-                }
-                finally
-                {
+                } finally {
                     oprot.DecrementRecursionDepth();
                 }
             }
@@ -6440,8 +5595,7 @@ namespace TheGraph.Thrift
             {
                 StringBuilder __sb = new StringBuilder("getNeighborhood_args(");
                 bool __first = true;
-                if (V != null && __isset.V)
-                {
+                if (V != null && __isset.V) {
                     if (!__first) { __sb.Append(", "); }
                     __first = false;
                     __sb.Append("V: ");
@@ -6461,14 +5615,11 @@ namespace TheGraph.Thrift
         {
             private List<vertex> _success;
 
-            public List<vertex> Success
-            {
-                get
-                {
+            public List<vertex> Success {
+                get {
                     return _success;
                 }
-                set
-                {
+                set {
                     __isset.success = true;
                     this._success = value;
                 }
@@ -6491,27 +5642,21 @@ namespace TheGraph.Thrift
             public void Read(TProtocol iprot)
             {
                 iprot.IncrementRecursionDepth();
-                try
-                {
+                try {
                     TField field;
                     iprot.ReadStructBegin();
-                    while (true)
-                    {
+                    while (true) {
                         field = iprot.ReadFieldBegin();
-                        if (field.Type == TType.Stop)
-                        {
+                        if (field.Type == TType.Stop) {
                             break;
                         }
-                        switch (field.ID)
-                        {
+                        switch (field.ID) {
                             case 0:
-                                if (field.Type == TType.List)
-                                {
+                                if (field.Type == TType.List) {
                                     {
                                         Success = new List<vertex>();
                                         TList _list16 = iprot.ReadListBegin();
-                                        for (int _i17 = 0; _i17 < _list16.Count; ++_i17)
-                                        {
+                                        for (int _i17 = 0; _i17 < _list16.Count; ++_i17) {
                                             vertex _elem18;
                                             _elem18 = new vertex();
                                             _elem18.Read(iprot);
@@ -6519,9 +5664,7 @@ namespace TheGraph.Thrift
                                         }
                                         iprot.ReadListEnd();
                                     }
-                                }
-                                else
-                                {
+                                } else {
                                     TProtocolUtil.Skip(iprot, field.Type);
                                 }
                                 break;
@@ -6532,9 +5675,7 @@ namespace TheGraph.Thrift
                         iprot.ReadFieldEnd();
                     }
                     iprot.ReadStructEnd();
-                }
-                finally
-                {
+                } finally {
                     iprot.DecrementRecursionDepth();
                 }
             }
@@ -6542,24 +5683,20 @@ namespace TheGraph.Thrift
             public void Write(TProtocol oprot)
             {
                 oprot.IncrementRecursionDepth();
-                try
-                {
+                try {
                     TStruct struc = new TStruct("getNeighborhood_result");
                     oprot.WriteStructBegin(struc);
                     TField field = new TField();
 
-                    if (this.__isset.success)
-                    {
-                        if (Success != null)
-                        {
+                    if (this.__isset.success) {
+                        if (Success != null) {
                             field.Name = "Success";
                             field.Type = TType.List;
                             field.ID = 0;
                             oprot.WriteFieldBegin(field);
                             {
                                 oprot.WriteListBegin(new TList(TType.Struct, Success.Count));
-                                foreach (vertex _iter19 in Success)
-                                {
+                                foreach (vertex _iter19 in Success) {
                                     _iter19.Write(oprot);
                                 }
                                 oprot.WriteListEnd();
@@ -6569,9 +5706,7 @@ namespace TheGraph.Thrift
                     }
                     oprot.WriteFieldStop();
                     oprot.WriteStructEnd();
-                }
-                finally
-                {
+                } finally {
                     oprot.DecrementRecursionDepth();
                 }
             }
@@ -6580,8 +5715,7 @@ namespace TheGraph.Thrift
             {
                 StringBuilder __sb = new StringBuilder("getNeighborhood_result(");
                 bool __first = true;
-                if (Success != null && __isset.success)
-                {
+                if (Success != null && __isset.success) {
                     if (!__first) { __sb.Append(", "); }
                     __first = false;
                     __sb.Append("Success: ");
@@ -6599,32 +5733,37 @@ namespace TheGraph.Thrift
 #endif
         public partial class bfs_args : TBase
         {
-            private int _start;
             private int _target;
+            private List<List<int>> _open;
+            private List<int> _visited;
 
-            public int Start
-            {
-                get
-                {
-                    return _start;
+            public int Target {
+                get {
+                    return _target;
                 }
-                set
-                {
-                    __isset.start = true;
-                    this._start = value;
+                set {
+                    __isset.target = true;
+                    this._target = value;
                 }
             }
 
-            public int Target
-            {
-                get
-                {
-                    return _target;
+            public List<List<int>> Open {
+                get {
+                    return _open;
                 }
-                set
-                {
-                    __isset.target = true;
-                    this._target = value;
+                set {
+                    __isset.open = true;
+                    this._open = value;
+                }
+            }
+
+            public List<int> Visited {
+                get {
+                    return _visited;
+                }
+                set {
+                    __isset.visited = true;
+                    this._visited = value;
                 }
             }
 
@@ -6635,8 +5774,9 @@ namespace TheGraph.Thrift
 #endif
             public struct Isset
             {
-                public bool start;
                 public bool target;
+                public bool open;
+                public bool visited;
             }
 
             public bfs_args()
@@ -6646,36 +5786,60 @@ namespace TheGraph.Thrift
             public void Read(TProtocol iprot)
             {
                 iprot.IncrementRecursionDepth();
-                try
-                {
+                try {
                     TField field;
                     iprot.ReadStructBegin();
-                    while (true)
-                    {
+                    while (true) {
                         field = iprot.ReadFieldBegin();
-                        if (field.Type == TType.Stop)
-                        {
+                        if (field.Type == TType.Stop) {
                             break;
                         }
-                        switch (field.ID)
-                        {
+                        switch (field.ID) {
                             case -1:
-                                if (field.Type == TType.I32)
-                                {
-                                    Start = iprot.ReadI32();
-                                }
-                                else
-                                {
+                                if (field.Type == TType.I32) {
+                                    Target = iprot.ReadI32();
+                                } else {
                                     TProtocolUtil.Skip(iprot, field.Type);
                                 }
                                 break;
                             case -2:
-                                if (field.Type == TType.I32)
-                                {
-                                    Target = iprot.ReadI32();
+                                if (field.Type == TType.List) {
+                                    {
+                                        Open = new List<List<int>>();
+                                        TList _list20 = iprot.ReadListBegin();
+                                        for (int _i21 = 0; _i21 < _list20.Count; ++_i21) {
+                                            List<int> _elem22;
+                                            {
+                                                _elem22 = new List<int>();
+                                                TList _list23 = iprot.ReadListBegin();
+                                                for (int _i24 = 0; _i24 < _list23.Count; ++_i24) {
+                                                    int _elem25;
+                                                    _elem25 = iprot.ReadI32();
+                                                    _elem22.Add(_elem25);
+                                                }
+                                                iprot.ReadListEnd();
+                                            }
+                                            Open.Add(_elem22);
+                                        }
+                                        iprot.ReadListEnd();
+                                    }
+                                } else {
+                                    TProtocolUtil.Skip(iprot, field.Type);
                                 }
-                                else
-                                {
+                                break;
+                            case -3:
+                                if (field.Type == TType.List) {
+                                    {
+                                        Visited = new List<int>();
+                                        TList _list26 = iprot.ReadListBegin();
+                                        for (int _i27 = 0; _i27 < _list26.Count; ++_i27) {
+                                            int _elem28;
+                                            _elem28 = iprot.ReadI32();
+                                            Visited.Add(_elem28);
+                                        }
+                                        iprot.ReadListEnd();
+                                    }
+                                } else {
                                     TProtocolUtil.Skip(iprot, field.Type);
                                 }
                                 break;
@@ -6686,9 +5850,7 @@ namespace TheGraph.Thrift
                         iprot.ReadFieldEnd();
                     }
                     iprot.ReadStructEnd();
-                }
-                finally
-                {
+                } finally {
                     iprot.DecrementRecursionDepth();
                 }
             }
@@ -6696,34 +5858,55 @@ namespace TheGraph.Thrift
             public void Write(TProtocol oprot)
             {
                 oprot.IncrementRecursionDepth();
-                try
-                {
+                try {
                     TStruct struc = new TStruct("bfs_args");
                     oprot.WriteStructBegin(struc);
                     TField field = new TField();
-                    if (__isset.target)
-                    {
+                    if (Visited != null && __isset.visited) {
+                        field.Name = "visited";
+                        field.Type = TType.List;
+                        field.ID = -3;
+                        oprot.WriteFieldBegin(field);
+                        {
+                            oprot.WriteListBegin(new TList(TType.I32, Visited.Count));
+                            foreach (int _iter29 in Visited) {
+                                oprot.WriteI32(_iter29);
+                            }
+                            oprot.WriteListEnd();
+                        }
+                        oprot.WriteFieldEnd();
+                    }
+                    if (Open != null && __isset.open) {
+                        field.Name = "open";
+                        field.Type = TType.List;
+                        field.ID = -2;
+                        oprot.WriteFieldBegin(field);
+                        {
+                            oprot.WriteListBegin(new TList(TType.List, Open.Count));
+                            foreach (List<int> _iter30 in Open) {
+                                {
+                                    oprot.WriteListBegin(new TList(TType.I32, _iter30.Count));
+                                    foreach (int _iter31 in _iter30) {
+                                        oprot.WriteI32(_iter31);
+                                    }
+                                    oprot.WriteListEnd();
+                                }
+                            }
+                            oprot.WriteListEnd();
+                        }
+                        oprot.WriteFieldEnd();
+                    }
+                    if (__isset.target) {
                         field.Name = "target";
                         field.Type = TType.I32;
-                        field.ID = -2;
+                        field.ID = -1;
                         oprot.WriteFieldBegin(field);
                         oprot.WriteI32(Target);
                         oprot.WriteFieldEnd();
                     }
-                    if (__isset.start)
-                    {
-                        field.Name = "start";
-                        field.Type = TType.I32;
-                        field.ID = -1;
-                        oprot.WriteFieldBegin(field);
-                        oprot.WriteI32(Start);
-                        oprot.WriteFieldEnd();
-                    }
                     oprot.WriteFieldStop();
                     oprot.WriteStructEnd();
-                }
-                finally
-                {
+                } finally {
                     oprot.DecrementRecursionDepth();
                 }
             }
@@ -6732,19 +5915,23 @@ namespace TheGraph.Thrift
             {
                 StringBuilder __sb = new StringBuilder("bfs_args(");
                 bool __first = true;
-                if (__isset.start)
-                {
-                    if (!__first) { __sb.Append(", "); }
-                    __first = false;
-                    __sb.Append("Start: ");
-                    __sb.Append(Start);
-                }
-                if (__isset.target)
-                {
+                if (__isset.target) {
                     if (!__first) { __sb.Append(", "); }
                     __first = false;
                     __sb.Append("Target: ");
                     __sb.Append(Target);
+                }
+                if (Open != null && __isset.open) {
+                    if (!__first) { __sb.Append(", "); }
+                    __first = false;
+                    __sb.Append("Open: ");
+                    __sb.Append(Open);
+                }
+                if (Visited != null && __isset.visited) {
+                    if (!__first) { __sb.Append(", "); }
+                    __first = false;
+                    __sb.Append("Visited: ");
+                    __sb.Append(Visited);
                 }
                 __sb.Append(")");
                 return __sb.ToString();
@@ -6760,14 +5947,11 @@ namespace TheGraph.Thrift
         {
             private List<int> _success;
 
-            public List<int> Success
-            {
-                get
-                {
+            public List<int> Success {
+                get {
                     return _success;
                 }
-                set
-                {
+                set {
                     __isset.success = true;
                     this._success = value;
                 }
@@ -6790,36 +5974,28 @@ namespace TheGraph.Thrift
             public void Read(TProtocol iprot)
             {
                 iprot.IncrementRecursionDepth();
-                try
-                {
+                try {
                     TField field;
                     iprot.ReadStructBegin();
-                    while (true)
-                    {
+                    while (true) {
                         field = iprot.ReadFieldBegin();
-                        if (field.Type == TType.Stop)
-                        {
+                        if (field.Type == TType.Stop) {
                             break;
                         }
-                        switch (field.ID)
-                        {
+                        switch (field.ID) {
                             case 0:
-                                if (field.Type == TType.List)
-                                {
+                                if (field.Type == TType.List) {
                                     {
                                         Success = new List<int>();
-                                        TList _list20 = iprot.ReadListBegin();
-                                        for (int _i21 = 0; _i21 < _list20.Count; ++_i21)
-                                        {
-                                            int _elem22;
-                                            _elem22 = iprot.ReadI32();
-                                            Success.Add(_elem22);
+                                        TList _list32 = iprot.ReadListBegin();
+                                        for (int _i33 = 0; _i33 < _list32.Count; ++_i33) {
+                                            int _elem34;
+                                            _elem34 = iprot.ReadI32();
+                                            Success.Add(_elem34);
                                         }
                                         iprot.ReadListEnd();
                                     }
-                                }
-                                else
-                                {
+                                } else {
                                     TProtocolUtil.Skip(iprot, field.Type);
                                 }
                                 break;
@@ -6830,9 +6006,7 @@ namespace TheGraph.Thrift
                         iprot.ReadFieldEnd();
                     }
                     iprot.ReadStructEnd();
-                }
-                finally
-                {
+                } finally {
                     iprot.DecrementRecursionDepth();
                 }
             }
@@ -6840,25 +6014,21 @@ namespace TheGraph.Thrift
             public void Write(TProtocol oprot)
             {
                 oprot.IncrementRecursionDepth();
-                try
-                {
+                try {
                     TStruct struc = new TStruct("bfs_result");
                     oprot.WriteStructBegin(struc);
                     TField field = new TField();
 
-                    if (this.__isset.success)
-                    {
-                        if (Success != null)
-                        {
+                    if (this.__isset.success) {
+                        if (Success != null) {
                             field.Name = "Success";
                             field.Type = TType.List;
                             field.ID = 0;
                             oprot.WriteFieldBegin(field);
                             {
                                 oprot.WriteListBegin(new TList(TType.I32, Success.Count));
-                                foreach (int _iter23 in Success)
-                                {
-                                    oprot.WriteI32(_iter23);
+                                foreach (int _iter35 in Success) {
+                                    oprot.WriteI32(_iter35);
                                 }
                                 oprot.WriteListEnd();
                             }
@@ -6867,9 +6037,7 @@ namespace TheGraph.Thrift
                     }
                     oprot.WriteFieldStop();
                     oprot.WriteStructEnd();
-                }
-                finally
-                {
+                } finally {
                     oprot.DecrementRecursionDepth();
                 }
             }
@@ -6878,8 +6046,7 @@ namespace TheGraph.Thrift
             {
                 StringBuilder __sb = new StringBuilder("bfs_result(");
                 bool __first = true;
-                if (Success != null && __isset.success)
-                {
+                if (Success != null && __isset.success) {
                     if (!__first) { __sb.Append(", "); }
                     __first = false;
                     __sb.Append("Success: ");
