@@ -36,7 +36,7 @@ namespace TheGraph.Thrift
       List<edge> getEdges(vertex V);
       List<vertex> getVertex(edge E);
       List<vertex> getNeighborhood(vertex V);
-      List<int> bfs(int target, List<List<int>> open, List<int> visited);
+      List<int> bfs(int start, int target);
     }
 
     public interface Iface : ISync {
@@ -109,7 +109,7 @@ namespace TheGraph.Thrift
       List<vertex> End_getNeighborhood(IAsyncResult asyncResult);
       #endif
       #if SILVERLIGHT
-      IAsyncResult Begin_bfs(AsyncCallback callback, object state, int target, List<List<int>> open, List<int> visited);
+      IAsyncResult Begin_bfs(AsyncCallback callback, object state, int start, int target);
       List<int> End_bfs(IAsyncResult asyncResult);
       #endif
     }
@@ -1255,9 +1255,9 @@ namespace TheGraph.Thrift
 
       
       #if SILVERLIGHT
-      public IAsyncResult Begin_bfs(AsyncCallback callback, object state, int target, List<List<int>> open, List<int> visited)
+      public IAsyncResult Begin_bfs(AsyncCallback callback, object state, int start, int target)
       {
-        return send_bfs(callback, state, target, open, visited);
+        return send_bfs(callback, state, start, target);
       }
 
       public List<int> End_bfs(IAsyncResult asyncResult)
@@ -1268,29 +1268,28 @@ namespace TheGraph.Thrift
 
       #endif
 
-      public List<int> bfs(int target, List<List<int>> open, List<int> visited)
+      public List<int> bfs(int start, int target)
       {
         #if !SILVERLIGHT
-        send_bfs(target, open, visited);
+        send_bfs(start, target);
         return recv_bfs();
 
         #else
-        var asyncResult = Begin_bfs(null, null, target, open, visited);
+        var asyncResult = Begin_bfs(null, null, start, target);
         return End_bfs(asyncResult);
 
         #endif
       }
       #if SILVERLIGHT
-      public IAsyncResult send_bfs(AsyncCallback callback, object state, int target, List<List<int>> open, List<int> visited)
+      public IAsyncResult send_bfs(AsyncCallback callback, object state, int start, int target)
       #else
-      public void send_bfs(int target, List<List<int>> open, List<int> visited)
+      public void send_bfs(int start, int target)
       #endif
       {
         oprot_.WriteMessageBegin(new TMessage("bfs", TMessageType.Call, seqid_));
         bfs_args args = new bfs_args();
+        args.Start = start;
         args.Target = target;
-        args.Open = open;
-        args.Visited = visited;
         args.Write(oprot_);
         oprot_.WriteMessageEnd();
         #if SILVERLIGHT
@@ -1916,7 +1915,7 @@ namespace TheGraph.Thrift
         bfs_result result = new bfs_result();
         try
         {
-          result.Success = iface_.bfs(args.Target, args.Open, args.Visited);
+          result.Success = iface_.bfs(args.Start, args.Target);
           oprot.WriteMessageBegin(new TMessage("bfs", TMessageType.Reply, seqid)); 
           result.Write(oprot);
         }
@@ -6130,9 +6129,21 @@ namespace TheGraph.Thrift
     #endif
     public partial class bfs_args : TBase
     {
+      private int _start;
       private int _target;
-      private List<List<int>> _open;
-      private List<int> _visited;
+
+      public int Start
+      {
+        get
+        {
+          return _start;
+        }
+        set
+        {
+          __isset.start = true;
+          this._start = value;
+        }
+      }
 
       public int Target
       {
@@ -6147,41 +6158,14 @@ namespace TheGraph.Thrift
         }
       }
 
-      public List<List<int>> Open
-      {
-        get
-        {
-          return _open;
-        }
-        set
-        {
-          __isset.open = true;
-          this._open = value;
-        }
-      }
-
-      public List<int> Visited
-      {
-        get
-        {
-          return _visited;
-        }
-        set
-        {
-          __isset.visited = true;
-          this._visited = value;
-        }
-      }
-
 
       public Isset __isset;
       #if !SILVERLIGHT
       [Serializable]
       #endif
       public struct Isset {
+        public bool start;
         public bool target;
-        public bool open;
-        public bool visited;
       }
 
       public bfs_args() {
@@ -6204,51 +6188,14 @@ namespace TheGraph.Thrift
             {
               case -1:
                 if (field.Type == TType.I32) {
-                  Target = iprot.ReadI32();
+                  Start = iprot.ReadI32();
                 } else { 
                   TProtocolUtil.Skip(iprot, field.Type);
                 }
                 break;
               case -2:
-                if (field.Type == TType.List) {
-                  {
-                    Open = new List<List<int>>();
-                    TList _list20 = iprot.ReadListBegin();
-                    for( int _i21 = 0; _i21 < _list20.Count; ++_i21)
-                    {
-                      List<int> _elem22;
-                      {
-                        _elem22 = new List<int>();
-                        TList _list23 = iprot.ReadListBegin();
-                        for( int _i24 = 0; _i24 < _list23.Count; ++_i24)
-                        {
-                          int _elem25;
-                          _elem25 = iprot.ReadI32();
-                          _elem22.Add(_elem25);
-                        }
-                        iprot.ReadListEnd();
-                      }
-                      Open.Add(_elem22);
-                    }
-                    iprot.ReadListEnd();
-                  }
-                } else { 
-                  TProtocolUtil.Skip(iprot, field.Type);
-                }
-                break;
-              case -3:
-                if (field.Type == TType.List) {
-                  {
-                    Visited = new List<int>();
-                    TList _list26 = iprot.ReadListBegin();
-                    for( int _i27 = 0; _i27 < _list26.Count; ++_i27)
-                    {
-                      int _elem28;
-                      _elem28 = iprot.ReadI32();
-                      Visited.Add(_elem28);
-                    }
-                    iprot.ReadListEnd();
-                  }
+                if (field.Type == TType.I32) {
+                  Target = iprot.ReadI32();
                 } else { 
                   TProtocolUtil.Skip(iprot, field.Type);
                 }
@@ -6274,49 +6221,20 @@ namespace TheGraph.Thrift
           TStruct struc = new TStruct("bfs_args");
           oprot.WriteStructBegin(struc);
           TField field = new TField();
-          if (Visited != null && __isset.visited) {
-            field.Name = "visited";
-            field.Type = TType.List;
-            field.ID = -3;
-            oprot.WriteFieldBegin(field);
-            {
-              oprot.WriteListBegin(new TList(TType.I32, Visited.Count));
-              foreach (int _iter29 in Visited)
-              {
-                oprot.WriteI32(_iter29);
-              }
-              oprot.WriteListEnd();
-            }
-            oprot.WriteFieldEnd();
-          }
-          if (Open != null && __isset.open) {
-            field.Name = "open";
-            field.Type = TType.List;
-            field.ID = -2;
-            oprot.WriteFieldBegin(field);
-            {
-              oprot.WriteListBegin(new TList(TType.List, Open.Count));
-              foreach (List<int> _iter30 in Open)
-              {
-                {
-                  oprot.WriteListBegin(new TList(TType.I32, _iter30.Count));
-                  foreach (int _iter31 in _iter30)
-                  {
-                    oprot.WriteI32(_iter31);
-                  }
-                  oprot.WriteListEnd();
-                }
-              }
-              oprot.WriteListEnd();
-            }
-            oprot.WriteFieldEnd();
-          }
           if (__isset.target) {
             field.Name = "target";
             field.Type = TType.I32;
-            field.ID = -1;
+            field.ID = -2;
             oprot.WriteFieldBegin(field);
             oprot.WriteI32(Target);
+            oprot.WriteFieldEnd();
+          }
+          if (__isset.start) {
+            field.Name = "start";
+            field.Type = TType.I32;
+            field.ID = -1;
+            oprot.WriteFieldBegin(field);
+            oprot.WriteI32(Start);
             oprot.WriteFieldEnd();
           }
           oprot.WriteFieldStop();
@@ -6331,23 +6249,17 @@ namespace TheGraph.Thrift
       public override string ToString() {
         StringBuilder __sb = new StringBuilder("bfs_args(");
         bool __first = true;
+        if (__isset.start) {
+          if(!__first) { __sb.Append(", "); }
+          __first = false;
+          __sb.Append("Start: ");
+          __sb.Append(Start);
+        }
         if (__isset.target) {
           if(!__first) { __sb.Append(", "); }
           __first = false;
           __sb.Append("Target: ");
           __sb.Append(Target);
-        }
-        if (Open != null && __isset.open) {
-          if(!__first) { __sb.Append(", "); }
-          __first = false;
-          __sb.Append("Open: ");
-          __sb.Append(Open);
-        }
-        if (Visited != null && __isset.visited) {
-          if(!__first) { __sb.Append(", "); }
-          __first = false;
-          __sb.Append("Visited: ");
-          __sb.Append(Visited);
         }
         __sb.Append(")");
         return __sb.ToString();
@@ -6407,12 +6319,12 @@ namespace TheGraph.Thrift
                 if (field.Type == TType.List) {
                   {
                     Success = new List<int>();
-                    TList _list32 = iprot.ReadListBegin();
-                    for( int _i33 = 0; _i33 < _list32.Count; ++_i33)
+                    TList _list20 = iprot.ReadListBegin();
+                    for( int _i21 = 0; _i21 < _list20.Count; ++_i21)
                     {
-                      int _elem34;
-                      _elem34 = iprot.ReadI32();
-                      Success.Add(_elem34);
+                      int _elem22;
+                      _elem22 = iprot.ReadI32();
+                      Success.Add(_elem22);
                     }
                     iprot.ReadListEnd();
                   }
@@ -6450,9 +6362,9 @@ namespace TheGraph.Thrift
               oprot.WriteFieldBegin(field);
               {
                 oprot.WriteListBegin(new TList(TType.I32, Success.Count));
-                foreach (int _iter35 in Success)
+                foreach (int _iter23 in Success)
                 {
-                  oprot.WriteI32(_iter35);
+                  oprot.WriteI32(_iter23);
                 }
                 oprot.WriteListEnd();
               }

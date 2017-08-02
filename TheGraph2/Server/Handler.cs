@@ -499,32 +499,33 @@ namespace TheGraph.Server
             }
         }
 
-        public List<int> bfs(int end, List<List<int>> open, List<int> visited){
-            while (open.Any()){
-                var current = open.First();
+        public List<int> bfs(int start, int end){
+            graph grafo = this.G(true);
+
+            Queue<List<int>> open = new Queue<List<int>>();
+            List<int> visited = new List<int>();
+
+            open.Enqueue(new List<int> { start });
+
+            while (open.Any() && visited.Count() <= grafo.V.Count()){
+                var current = open.Dequeue();
                 int currentNode = current.Last();
 
-                using (var client = getServerOf(currentNode.ToString())) {
-                    if (client != null)
-                        return client.bfs(end, open, visited);
-                }
-
-                open.RemoveAt(0);
                 if (currentNode == end)
                     return current;
 
                 if(!visited.Contains(currentNode))
                     visited.Add(currentNode);
 
-                var next = this.getEdges(new vertex() { Name = currentNode }).Where(e => e.V1 == currentNode).Select(e => e.V2).Distinct().ToList();
+                var next = grafo.E.Where(e => e.V1 == currentNode).Select(e => e.V2).Distinct().ToList();
                 next.RemoveAll(i => visited.Contains(i));
                 
                 foreach(int i in next){
                     var newWay = current.ToList();
                     newWay.Add(i);
-
-                    open.Add(newWay);
+                    open.Enqueue(newWay);
                 }
+
             }
 
             return null;

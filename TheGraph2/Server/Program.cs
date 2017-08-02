@@ -54,7 +54,7 @@ namespace TheGraph.Server
             try
             {
                 if(args.Length == 0)
-                    args = new string[] { "-p:9091", "-inicial" };
+                    args = new string[] { "-p:9091" };
 
                 Tuple<int, bool> parameters = CheckArgs(args);
                 if (parameters == null)

@@ -382,7 +382,7 @@ namespace TheGraph.Client
 
                     try {
                         try{
-                            var result = client.bfs(V2, new List<List<int>>() { new List<int>() { V1 } }, new List<int>());
+                            var result = client.bfs(V1, V2);
                             txt_Console.Text += string.Join("-", result) + "\n";
                         } catch(Exception ex) {
                             txt_Console.Text += "NÃO EXISTE CAMINHO\n";
