@@ -26,12 +26,12 @@ namespace TheGraph.Client
         public Graph_Handler()
         {
             this.graph = null;
-            this.transport = new TSocket("localhost", 9090);
+            /*this.transport = new TSocket("localhost", 9090);
             this.protocol = new TBinaryProtocol(transport);
-            this.client = new Thrift.TheGraph.Client(this.protocol);
+            this.client = new Thrift.TheGraph.Client(this.protocol);    
 
-            transport.Open();
-
+            transport.Open();*/
+            
             InitializeComponent();
         }
 
@@ -41,6 +41,8 @@ namespace TheGraph.Client
                 return;
 
             Dictionary<int, Point> positions = new Dictionary<int, Point>();
+            List<Tuple<int, int, bool>> edges = new List<Tuple<int, int, bool>>();
+
             double radius = 200d;
             Point center = new Point(pnl_Grafo.Width / 2, pnl_Grafo.Height / 2); //UM PONTO NO MEIO DO PAINEL
             
@@ -65,6 +67,11 @@ namespace TheGraph.Client
 
             foreach (Thrift.edge a in this.graph.E)
             {
+                if (edges.Any(t => t.Item1 == a.V2 && t.Item2 == a.V1 && a.Directed == t.Item3))
+                    continue;
+
+                edges.Add(Tuple.Create<int, int, bool>(a.V1, a.V2, a.Directed));
+
                 p = new Pen(Color.DarkOrange, 1);
                 Point pt1 = positions[a.V1];   
                 Point pt2 = positions[a.V2];   
@@ -106,8 +113,24 @@ namespace TheGraph.Client
 
                 if (command.Contains("draw"))
                 {
-                    this.graph = client.G();
+                    this.graph = client.G(true);
                     pnl_Grafo.Refresh();
+                }
+
+                else if (command.Contains("connect"))
+                {
+                    command = command.Remove(0, command.IndexOf("("));
+                    command = command.Replace("(", "").Replace(")", "");
+                    var values = command.Split(',');
+
+                    if (this.transport != null && this.transport.IsOpen)
+                        this.transport.Close();
+
+                    this.transport = new TSocket(values[0], int.Parse(values[1]));
+                    this.protocol = new TBinaryProtocol(transport);
+                    this.client = new Thrift.TheGraph.Client(this.protocol);
+
+                    transport.Open();
                 }
 
                 else if (command.Contains("add-v"))
@@ -126,7 +149,7 @@ namespace TheGraph.Client
 
                     try
                     {
-                        client.createVertex(new Thrift.vertex()
+                       var result = client.createVertex(new Thrift.vertex()
                         {
                             Name = Name,
                             Color = Color,
@@ -299,7 +322,7 @@ namespace TheGraph.Client
                     command = command.Replace("(", "").Replace(")", "");
                     var values = command.Split(',');
 
-                    //
+                    //  
                     int V1 = int.Parse(values[0]);
                     int V2 = int.Parse(values[1]);
 
@@ -353,16 +376,39 @@ namespace TheGraph.Client
                     }
                 }
 
+                else if (command.Contains("bfs"))
+                {
+                    command = command.Remove(0, command.IndexOf("("));
+                    command = command.Replace("(", "").Replace(")", "");
+                    var values = command.Split(',');
+
+                    //
+                    int V1 = int.Parse(values[0]);
+                    int V2 = int.Parse(values[1]);
+                    //
+
+                    try {
+                        try{
+                            var result = client.bfs(V2, new List<List<int>>() { new List<int>() { V1 } }, new List<int>());
+                            txt_Console.Text += string.Join("-", result) + "\n";
+                        } catch(Exception ex) {
+                            txt_Console.Text += "NÃO EXISTE CAMINHO\n";
+                        }
+                    } catch (Exception exception) {
+                        MessageBox.Show(exception.ToString());
+                    }
+                }
+
+
                 else if (command.Contains("neighborhood"))
                 {
                     command = command.Remove(0, command.IndexOf("("));
                     command = command.Replace("(", "").Replace(")", "");
                     var values = command.Split(',');
 
-                    try
-                    {
+                    try {
                         int Name = int.Parse(values[0]);
-                        var LV = client.getNeighborhood(new Thrift.vertex() { Name = Name });
+                        var LV = client.getNeighborhood(new Thrift.vertex() { Name = Name});
 
                         foreach (var V in LV)
                             txt_Console.Text += string.Format("Name = {0}\nColor={1}\nWeight={3}\nDescription={2}\n", V.Name, V.Color, V.Weight, V.Description);

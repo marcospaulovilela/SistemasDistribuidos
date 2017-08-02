@@ -1,0 +1,10 @@
+C:\Users\marco\OneDrive\Sistemas Distribuidos\TheGraph\Server\Raft\bin\Debug\Raft.exe.config
+C:\Users\marco\OneDrive\Sistemas Distribuidos\TheGraph\Server\Raft\bin\Debug\Raft.exe
+C:\Users\marco\OneDrive\Sistemas Distribuidos\TheGraph\Server\Raft\bin\Debug\Raft.pdb
+C:\Users\marco\OneDrive\Sistemas Distribuidos\TheGraph\Server\Raft\bin\Debug\TheGraph.Thrift.dll
+C:\Users\marco\OneDrive\Sistemas Distribuidos\TheGraph\Server\Raft\bin\Debug\Thrift.dll
+C:\Users\marco\OneDrive\Sistemas Distribuidos\TheGraph\Server\Raft\bin\Debug\TheGraph.Thrift.pdb
+C:\Users\marco\OneDrive\Sistemas Distribuidos\TheGraph\Server\Raft\bin\Debug\Thrift.pdb
+C:\Users\marco\OneDrive\Sistemas Distribuidos\TheGraph\Server\Raft\obj\Debug\Raft.exe
+C:\Users\marco\OneDrive\Sistemas Distribuidos\TheGraph\Server\Raft\obj\Debug\Raft.pdb
+C:\Users\marco\OneDrive\Sistemas Distribuidos\TheGraph\Server\Raft\obj\Debug\Raft.csprojResolveAssemblyReference.cache

@@ -16,7 +16,7 @@ namespace TheGraph.Client
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Graph_Handler());
+            Application.Run(new Menu());
         }
     }
 }

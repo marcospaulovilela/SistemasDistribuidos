@@ -55,7 +55,6 @@
     <Compile Include="VertexDontExists.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="graph.thrift" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

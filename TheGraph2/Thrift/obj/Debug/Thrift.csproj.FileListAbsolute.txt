@@ -1,5 +1,0 @@
-C:\Users\marco\OneDrive\Sistemas Distribuidos\TheGraph\Thrift\bin\Debug\Thrift.dll
-C:\Users\marco\OneDrive\Sistemas Distribuidos\TheGraph\Thrift\bin\Debug\Thrift.pdb
-C:\Users\marco\OneDrive\Sistemas Distribuidos\TheGraph\Thrift\obj\Debug\Thrift.csprojResolveAssemblyReference.cache
-C:\Users\marco\OneDrive\Sistemas Distribuidos\TheGraph\Thrift\obj\Debug\Thrift.dll
-C:\Users\marco\OneDrive\Sistemas Distribuidos\TheGraph\Thrift\obj\Debug\Thrift.pdb

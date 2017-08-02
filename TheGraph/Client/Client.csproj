@@ -53,22 +53,86 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AdicionarFilme.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AdicionarFilme.Designer.cs">
+      <DependentUpon>AdicionarFilme.cs</DependentUpon>
+    </Compile>
+    <Compile Include="AdicionarPessoa.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AdicionarPessoa.Designer.cs">
+      <DependentUpon>AdicionarPessoa.cs</DependentUpon>
+    </Compile>
+    <Compile Include="AvaliacoesFilme.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AvaliacoesFilme.Designer.cs">
+      <DependentUpon>AvaliacoesFilme.cs</DependentUpon>
+    </Compile>
+    <Compile Include="AvaliarFilme.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AvaliarFilme.Designer.cs">
+      <DependentUpon>AvaliarFilme.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Connection.cs" />
+    <Compile Include="FilmesAssistidos.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FilmesAssistidos.Designer.cs">
+      <DependentUpon>FilmesAssistidos.cs</DependentUpon>
+    </Compile>
     <Compile Include="Graph_Handler.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Graph_Handler.designer.cs">
       <DependentUpon>Graph_Handler.cs</DependentUpon>
     </Compile>
+    <Compile Include="MenorCaminho.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MenorCaminho.Designer.cs">
+      <DependentUpon>MenorCaminho.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="AdicionarFilme.resx">
+      <DependentUpon>AdicionarFilme.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AdicionarPessoa.resx">
+      <DependentUpon>AdicionarPessoa.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AvaliacoesFilme.resx">
+      <DependentUpon>AvaliacoesFilme.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AvaliarFilme.resx">
+      <DependentUpon>AvaliarFilme.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FilmesAssistidos.resx">
+      <DependentUpon>FilmesAssistidos.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Graph_Handler.resx">
       <DependentUpon>Graph_Handler.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MenorCaminho.resx">
+      <DependentUpon>MenorCaminho.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Menu.resx">
+      <DependentUpon>Menu.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <Compile Include="Menu.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Menu.Designer.cs">
+      <DependentUpon>Menu.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
